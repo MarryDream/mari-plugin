@@ -1,4 +1,5 @@
 import bot from "ROOT";
+import * as m from "./module";
 import pluginSetting from "./setting";
 import { PluginSetting } from "@modules/plugin";
 import { createServer } from "./server";
@@ -9,6 +10,8 @@ import { Renderer } from "@modules/renderer";
 
 export let config: MariPluginConfig
 export let renderer: Renderer;
+export const enKaClass = new m.EnKaClass();
+
 export const configFileName = "mari_plugin"
 
 function loadConfig( file: FileManagement ): MariPluginConfig {

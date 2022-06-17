@@ -1,51 +1,6 @@
-type ArtIdx = "arti1" | "arti2" | "arti3" | "arti4" | "arti5"
+import * as ApiType from "#mari-plugin/types";
 
-type ArtifactInfo = {
-	id: string;
-	name: string;
-	sets: {
-		[P in ArtIdx]: {
-			id: string;
-			name: string
-		}
-	};
-	effect: Record<string, string>
-}
-
-type CharaInfo = {
-	Skills: Record<string, string>;
-	ProudMap: Record<string, number>;
-	Costumes: {
-		[P in string]: {
-			icon: string;
-			art: string;
-			avatarId: number;
-		}
-	}
-}
-
-type Weapon = {
-	name: string;
-	star: number;
-	level: number;
-	promote: number;
-	affix: number;
-}
-
-type Artifact = {
-	shirtName: string;
-	artifactName: string;
-	level: number;
-	mainAttr: [ string, number ];
-	subAttr: [ string, number ][];
-}
-
-type Skill = {
-	level: number;
-	ext: boolean;
-}
-
-const artiIdx: Record<string, ArtIdx> = {
+const artiIdx: Record<string, ApiType.ArtIdx> = {
 	EQUIP_BRACER: "arti1",
 	EQUIP_NECKLACE: "arti2",
 	EQUIP_SHOES: "arti3",
@@ -53,11 +8,15 @@ const artiIdx: Record<string, ArtIdx> = {
 	EQUIP_DRESS: "arti5"
 };
 
+/* 不需要带百分比的属性 */
+const attrNoPercent = [ "HP", "ATTACK", "BASE_ATTACK", "DEFENSE", "ELEMENT_MASTERY" ];
+
 const attrMap = {
 	HP: "生命值",
 	HP_PERCENT: "生命值",
 	ATTACK: "攻击力",
 	ATTACK_PERCENT: "攻击力",
+	BASE_ATTACK: "基础攻击力",
 	DEFENSE: "防御力",
 	DEFENSE_PERCENT: "防御力",
 	ELEMENT_MASTERY: "元素精通",
@@ -75,23 +34,23 @@ const attrMap = {
 };
 
 export class EnKa {
-	private readonly artifact: Record<string, ArtifactInfo>;
+	private readonly artifact: ApiType.EnKaArtifact;
 	
 	constructor(
-		private readonly meta: Record<string, string>,
-		private readonly chara: Record<string, CharaInfo>,
-		artifact: Record<string, ArtifactInfo>
+		private readonly meta: ApiType.EnKaMeta,
+		private readonly chara: ApiType.EnKaChara,
+		artifact: ApiType.EnKaArtifact
 	) {
-		const formatArtifact: Record<string, ArtifactInfo> = {};
+		const formatArtifact: ApiType.EnKaArtifact = {};
 		Object.values( artifact ).forEach( art => {
 			formatArtifact[art.name] = art;
 		} )
-		this.artifact = artifact;
+		this.artifact = formatArtifact;
 	}
 	
 	/* 获取用户数据 */
-	public getDetailInfo( data: any ) {
-		const avatars = data.avatarInfoList.map(chara => {
+	public getDetailInfo( data: any ): ApiType.Detail {
+		const avatars: ApiType.Avatar[] = data.avatarInfoList.map( chara => {
 			const avatarId = chara["avatarId"];
 			return {
 				id: avatarId,
@@ -103,7 +62,7 @@ export class EnKa {
 				talent: chara.talentIdList ? <number>chara.talentIdList.length : 0,
 				skill: this.getSkill( avatarId, chara.skillLevelMap, chara.proudSkillExtraLevelMap )
 			}
-		})
+		} )
 		return {
 			nickname: data.playerInfo.nickname,
 			avatars,
@@ -111,22 +70,26 @@ export class EnKa {
 	}
 	
 	/* 获取武器信息 */
-	private getWeapon( data: any[] ): Weapon {
+	private getWeapon( data: any[] ): ApiType.Weapon {
 		const { weapon, flat } = data.find( d => d.flat?.itemType === "ITEM_WEAPON" );
+		const attrs: ApiType.ArtAttr[] = flat.weaponStats.map( s => {
+			return this.getArtInfo( s );
+		} );
 		
 		return {
 			name: this.meta[flat.nameTextMapHash],
 			star: flat.rankLevel,
 			level: weapon.level,
 			promote: weapon.promoteLevel,
-			affix: ( <number>Object.values( weapon.affixMap )[0] || 0 ) + 1
+			affix: ( <number>Object.values( weapon.affixMap )[0] || 0 ) + 1,
+			attrs
 		}
 	}
 	
 	/* 获取圣遗物信息 */
-	private getArtifact( data: any[] ) {
+	private getArtifact( data: any[] ): { list: ApiType.Artifact, effects: ApiType.Effect[] } {
 		/* 圣遗物属性对象 */
-		const ret: Record<string, Artifact> = {};
+		const ret: ApiType.Artifact = {};
 		
 		/* 统计圣遗物套装 */
 		const tmpSetBucket: Record<string, any> = {};
@@ -159,14 +122,14 @@ export class EnKa {
 		}
 		
 		/* 套装属性对象 */
-		const effects: { name: string, count: number, effect: string }[] = [];
+		const effects: ApiType.Effect[] = [];
 		for ( const key of Object.keys( tmpSetBucket ) ) {
 			const { count, effect } = tmpSetBucket[key];
 			for ( const num in effect ) {
 				if ( count >= num ) {
 					effects.push( {
 						name: key,
-						count: parseInt(num),
+						count: parseInt( num ),
 						effect: effect[num]
 					} )
 				}
@@ -177,7 +140,7 @@ export class EnKa {
 	}
 	
 	/* 获取天赋信息 */
-	private getSkill( charId: string, skillLevelMap: Record<string, number>, extSkillLevelMap: Record<string, number> = {} ): Record<string, Skill> {
+	private getSkill( charId: string, skillLevelMap: Record<string, number>, extSkillLevelMap: Record<string, number> = {} ): ApiType.Skill {
 		let { Skills, ProudMap } = this.chara[charId];
 		let idx = 1;
 		/* 映射对象，a 普攻 s 战技 e 爆发 */
@@ -200,7 +163,7 @@ export class EnKa {
 			skillTypeMap[sExtId] = skillTypeMap[sId];
 		}
 		/* 技能等级对象，技能类型：等级 */
-		const skillInfo: Record<string, Skill> = {};
+		const skillInfo: ApiType.Skill = {};
 		
 		/* 设置天赋基础等级 */
 		for ( const sId in skillLevelMap ) {
@@ -226,14 +189,22 @@ export class EnKa {
 	}
 	
 	/* 获取圣遗物属性信息，[属性名, 值] */
-	private getArtInfo( data: { mainPropId?: string; appendPropId?: string; statValue: number } ): [ string, number ] {
+	private getArtInfo( data: { mainPropId?: string; appendPropId?: string; statValue: number } ): ApiType.ArtAttr {
 		let propId = data.appendPropId || data.mainPropId || "";
 		propId = propId.replace( "FIGHT_PROP_", "" );
 		
 		if ( !attrMap[propId] ) {
-			return [ "", 0 ]
+			return {
+				attr: "",
+				value: ""
+			}
 		}
 		
-		return [ attrMap[propId], data.statValue ]
+		const percentMark = attrNoPercent.includes( propId ) ? "" : "%";
+		
+		return {
+			attr: attrMap[propId],
+			value: data.statValue.toString() + percentMark
+		}
 	}
 }
