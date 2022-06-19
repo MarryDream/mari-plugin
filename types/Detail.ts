@@ -11,23 +11,6 @@ export interface ArtAttr {
 
 /**
  * @interface
- * 圣遗物信息
- * @shirtName 套装名称
- * @artifactName 单件名称
- * @level 等级
- * @mainAttr 主属性信息
- * @subAttr 副属性信息组
- */
-export interface ArtifactInfo {
-	shirtName: string;
-	artifactName: string;
-	level: number;
-	mainAttr: ArtAttr;
-	subAttr: ArtAttr[];
-}
-
-/**
- * @interface
  * 天赋信息
  * @level 等级
  * @ext 等级是否存在额外加成
@@ -95,7 +78,23 @@ export interface Avatar {
 	skill: Skill;
 }
 
-export type Artifact = Record<string, ArtifactInfo>
+/**
+ * @interface
+ * 圣遗物信息
+ * @shirtName 套装名称
+ * @artifactName 单件名称
+ * @level 等级
+ * @mainAttr 主属性信息
+ * @subAttr 副属性信息组
+ */
+export interface Artifact {
+	shirtName: string;
+	artifactName: string;
+	level: number;
+	mainAttr: ArtAttr;
+	subAttr: ArtAttr[];
+}
+
 export type Skill = Record<string, SkillInfo>
 
 export interface Detail {

@@ -87,9 +87,9 @@ export class EnKa {
 	}
 	
 	/* 获取圣遗物信息 */
-	private getArtifact( data: any[] ): { list: ApiType.Artifact, effects: ApiType.Effect[] } {
+	private getArtifact( data: any[] ): { list: Array<ApiType.Artifact | {}>, effects: Array<ApiType.Effect> } {
 		/* 圣遗物属性对象 */
-		const ret: ApiType.Artifact = {};
+		const ret: Array<ApiType.Artifact | {}> = new Array( 5 ).fill( {} );
 		
 		/* 统计圣遗物套装 */
 		const tmpSetBucket: Record<string, any> = {};
@@ -106,7 +106,8 @@ export class EnKa {
 			const artInfo = this.artifact[artShirtName];
 			const artSet = artInfo.sets[artIdx];
 			
-			ret[artIdx] = {
+			const artIndex = parseInt( <string>artIdx.split( "arti" ).pop() ) - 1;
+			ret[artIndex] = {
 				shirtName: artShirtName,
 				artifactName: artSet.name,
 				level: Math.min( 20, ( reliquary?.level || 1 ) - 1 ),

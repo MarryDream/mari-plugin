@@ -11,7 +11,7 @@ async function getUID( userID: number, redis: BOT["redis"] ): Promise<number | s
 	return uid.length ? parseInt( uid ) : "您还未绑定游戏UID";
 }
 
-export async function main( { sendMessage, messageData, redis, logger, client }: InputParameter ): Promise<void> {
+export async function main( { sendMessage, messageData, redis, logger }: InputParameter ): Promise<void> {
 	const name: string = messageData.raw_message;
 	const userID: number = messageData.user_id;
 	
@@ -32,8 +32,8 @@ export async function main( { sendMessage, messageData, redis, logger, client }:
 		return;
 	}
 	const realName: string = <string>result.info;
-	const charID: number = characterID.map[realName];
 	
+	const charID: number = characterID.map[realName];
 	const uid: number = info;
 	
 	try {

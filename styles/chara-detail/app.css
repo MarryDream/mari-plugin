@@ -1,1 +1,14 @@
-.chara-detail {}
+.chara-detail {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	height: 900px;
+}
+
+.chara-detail::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-color: #fff;
+}

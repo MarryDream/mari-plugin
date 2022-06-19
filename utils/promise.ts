@@ -4,6 +4,7 @@ import { enKaClass } from "#mari-plugin/init";
 import { EnKa } from "#mari-plugin/utils/enka";
 import { SendFunc } from "@modules/message";
 import * as ApiType from "#mari-plugin/types"
+import { typeData } from "#genshin/init";
 
 export async function charaDetailPromise( uid: number, userID: number, charId: number, charName: string, sendMessage: SendFunc ): Promise<void> {
 	const dbKey: string = `mari-plugin.chara-detail-list-${ uid }`;
@@ -32,5 +33,14 @@ export async function charaDetailPromise( uid: number, userID: number, charId: n
 		throw `请确认「${ charName }」已被展示在游戏的角色展柜中，且打开了「显示角色详情」。`;
 	}
 	
-	await bot.redis.setString( `mari-plugin.chara-detail-${ userID }`, JSON.stringify( currentChara ) );
+	/* 获取所选角色属性 */
+	const element = typeData.character[charName] === "!any!" ? "none" : typeData.character[charName];
+	
+	await bot.redis.setString( `mari-plugin.chara-detail-${ userID }`, JSON.stringify( {
+		uid,
+		username: detail.nickname,
+		element,
+		name: charName,
+		...currentChara
+	} ) );
 }
