@@ -2,7 +2,9 @@
 	position: relative;
 	display: flex;
 	justify-content: space-between;
+	padding: 25px;
 	height: 900px;
+	box-sizing: border-box;
 }
 
 .chara-detail::before {
@@ -10,5 +12,300 @@
 	position: absolute;
 	left: 0;
 	top: 0;
-	background-color: #fff;
+	right: 0;
+	bottom: 0;
+	background: url("https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/background/detail-page.png") top center no-repeat;
+	background-size: cover;
+	filter: hue-rotate(var(--bg-hue-rotate));
+}
+
+/* 通用标题 */
+.model-title {
+	font-weight: 400;
+	font-size: 32px;
+	line-height: 39px;
+	color: #fff;
+	text-shadow: 2px 2px 2px #000;
+}
+
+/* 卡片公共样式 */
+.card {
+	border: 1px solid rgba(0, 0, 0, 0.6);
+	border-radius: 8px;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.25) 100%);
+}
+
+.card .list-item {
+	display: flex;
+	align-items: center;
+	height: 45px;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	color: #fff;
+}
+
+.card .list-item:nth-of-type(2n) {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.card .list-item.special {
+	color: #F5DEB3;
+}
+
+/* 立绘 */
+.chara-detail > .portrait-box {
+	position: absolute;
+	top: 0;
+	left: 190px;
+	width: 775px;
+	height: 100%;
+	z-index: 10;
+}
+
+.chara-detail > .portrait-box > .portrait {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 100%;
+	transform: translate(-50%, -50%);
+}
+
+/* 左侧布局 */
+.chara-detail > .detail-left {
+	position: relative;
+	z-index: 100;
+}
+
+.chara-detail > .detail-left > .user {
+	display: flex;
+	align-items: center;
+}
+
+.chara-detail > .detail-left > .user > img {
+	width: 104px;
+	height: 104px;
+	border-radius: 50%;
+	border: 6px solid rgba(255, 255, 255, 0.15);
+	filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+}
+
+.chara-detail > .detail-left > .user > .user-info {
+	margin-left: 32px;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 29px;
+	color: #fff;
+	text-shadow: 2px 2px 2px #000;
+}
+
+.chara-detail > .detail-left > .user > .user-info > p:last-child {
+	margin-top: 12px;
+}
+
+/* 基本信息 */
+.chara-detail > .detail-left > .base-info {
+	margin-top: 40px;
+	width: 288px;
+}
+
+.chara-detail > .detail-left > .base-info >.list-item {
+	justify-content: space-between;
+	padding: 0 12px;
+}
+
+.chara-detail > .detail-left > .base-info >.list-item .label {
+	margin-left: 8px;
+}
+
+.chara-detail > .detail-left > .base-info > .list-item > .base-info-value {
+	display: flex;
+	align-items: center;
+}
+
+.chara-detail > .detail-left > .base-info > .list-item .extra {
+	margin-left: 4px;
+	font-size: 14px;
+	color: #82FF9A;
+}
+
+/* 命座 */
+.chara-detail > .detail-left > .talent {
+	display: flex;
+	margin-top: 50px;
+}
+
+.chara-detail > .detail-left > .talent > .model-title {
+	margin-top: 20px;
+}
+
+.chara-detail > .detail-left > .talent > .talent-content {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-left: 10px;
+	width: 210px;
+}
+
+.chara-detail > .detail-left > .talent > .talent-content > li {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: -12px;
+	width: 82px;
+	height: 82px;
+}
+
+.chara-detail > .detail-left > .talent > .talent-content > li:nth-of-type(n + 4) {
+	margin-top: -12px;
+	left: -36px;
+}
+
+.chara-detail > .detail-left > .talent > .talent-content > li.block {
+	opacity: .4;
+}
+
+.chara-detail > .detail-left > .talent > .talent-content > li::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background: url("https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/background/talent.png") center center no-repeat;
+	background-size: contain;
+	filter: hue-rotate(var(--talent-hue-rotate));
+ }
+
+.chara-detail > .detail-left > .talent > .talent-content > li > img {
+	position: relative;
+	width: 38px;
+	z-index: 100;
+}
+
+/* 天赋 */
+
+.chara-detail > .detail-left > .skill {
+	display: flex;
+	margin-top: 20px;
+}
+
+.chara-detail > .detail-left > .skill > .model-title {
+	margin-top: 10px;
+}
+
+.chara-detail > .detail-left > .skill > .skill-content {
+	display: flex;
+	align-items: center;
+	margin-left: 20px;
+}
+
+.chara-detail > .detail-left > .skill > .skill-content > li {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: 8px;
+	width: 62px;
+	height: 62px;
+	background: url("https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/background/skill.svg") center center no-repeat;
+	background-size: contain;
+}
+
+.chara-detail > .detail-left > .skill > .skill-content > li > img {
+	width: 38px;
+}
+
+.chara-detail > .detail-left > .skill > .skill-content > li > .skill-level {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 30px;
+	height: 16px;
+	background-color: rgba(0, 0, 0, 0.4);
+	border-radius: 8px;
+	font-size: 14px;
+	line-height: 18px;
+	color: #fff;
+	text-align: center;
+	transform: translateX(-50%);
+}
+
+.chara-detail > .detail-left > .skill > .skill-content > li > .skill-level.special {
+	background-color: #45deff;
+}
+
+/* 右侧布局 */
+.chara-detail > .detail-right {
+	position: relative;
+	width: 790px;
+	z-index: 100;
+}
+
+.chara-detail > .detail-right > .avatar-info {
+	margin-top: 26px;
+}
+
+.chara-detail > .detail-right > .avatar-info > p:first-child {
+	display: flex;
+	align-items: flex-end;
+	margin-bottom: 8px;
+}
+
+.chara-detail > .detail-right > .avatar-info .avatar-name {
+	font-weight: 400;
+	font-size: 42px;
+	line-height: 50px;
+	color: #FFFFFF;
+	text-shadow: 2px 2px 2px #000;
+}
+
+.chara-detail > .detail-right > .avatar-info .level-info {
+	margin-bottom: 8px;
+	margin-left: 8px;
+	width: 67px;
+	height: 26px;
+	background-color: rgba(255, 255, 255, 0.3);
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+	border-radius: 4px;
+	font-weight: 400;
+	font-size: 20px;
+	line-height: 28px;
+	text-align: center;
+	color: #F5DEB3;
+}
+
+.chara-detail > .detail-right > .avatar-info .talent-info {
+	margin-bottom: 8px;
+	margin-left: 8px;
+	width: 67px;
+	height: 26px;
+	background-color: #B14E16;
+	box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+	border-radius: 4px;
+	line-height: 28px;
+	text-align: center;
+	color: #fff;
+}
+
+.chara-detail > .detail-right > .avatar-info > .fetter-info {
+	margin-left: 8px;
+	font-weight: 400;
+	font-size: 20px;
+	line-height: 24px;
+	color: #fff;
+	text-shadow: 2px 2px 2px #000;
+}
+
+	/* 作者信息 */
+.chara-detail > .author {
+	position: absolute;
+	top: 48px;
+	right: 26px;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 29px;
+	color: #fff;
+	text-shadow: 2px 2px 2px #000;
 }
