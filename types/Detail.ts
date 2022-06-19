@@ -95,6 +95,21 @@ export interface Artifact {
 	subAttr: ArtAttr[];
 }
 
+/**
+ * @interface
+ * 角色面板数据
+ * @attr 属性名
+ * @baseValue 基础值
+ * @addValue 增加值
+ * @resultValue 结果值
+ */
+export interface Overview {
+	attr: string,
+	baseValue: string,
+	extraValue: string,
+	resultValue: string
+}
+
 export type Skill = Record<string, SkillInfo>
 
 export interface Detail {

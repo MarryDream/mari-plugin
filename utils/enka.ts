@@ -1,5 +1,24 @@
 import * as ApiType from "#mari-plugin/types";
 
+/**
+ * @interface
+ * 角色属性总览映射对象
+ * @label 属性名称
+ * @baseCode 属性基础值对应的 enka 数据 code 码
+ * @maxCode 属性最终值对应的 enka 数据 code 码
+ * @percentCode 基础值放大比例对应的 enka 数据 code 码
+ * @addCode 基础值增加值对应的 enka 数据 code 码
+ * @percent 是否以百分比显示
+ */
+interface IAttrOverviewMap {
+	label: string
+	baseCode: number
+	maxCode?: number
+	percentCode?: number
+	addCode?: number
+	percent: boolean
+}
+
 const artiIdx: Record<string, ApiType.ArtIdx> = {
 	EQUIP_BRACER: "arti1",
 	EQUIP_NECKLACE: "arti2",
@@ -33,6 +52,76 @@ const attrMap = {
 	PHYSICAL_ADD_HURT: "物理伤害加成"
 };
 
+const attrOverviewMap: IAttrOverviewMap[] = [ {
+	label: "生命值上限",
+	baseCode: 1,
+	maxCode: 2000,
+	percent: false
+}, {
+	label: "基础攻击力",
+	baseCode: 4,
+	percentCode: 6,
+	addCode: 5,
+	percent: false
+}, {
+	label: "防御力",
+	baseCode: 7,
+	maxCode: 2002,
+	percent: false
+}, {
+	label: "元素精通",
+	baseCode: 28,
+	percent: false
+}, {
+	label: "暴击率",
+	baseCode: 20,
+	percent: true
+}, {
+	label: "暴击伤害",
+	baseCode: 22,
+	percent: true
+}, {
+	label: "元素充能效率",
+	baseCode: 23,
+	percent: true
+}, {
+	label: "治疗加成",
+	baseCode: 26,
+	percent: true
+}, {
+	label: "物理伤害加成",
+	baseCode: 30,
+	percent: true
+}, {
+	label: "火元素伤害加成",
+	baseCode: 40,
+	percent: true
+}, {
+	label: "雷元素伤害加成",
+	baseCode: 41,
+	percent: true
+}, {
+	label: "水元素伤害加成",
+	baseCode: 42,
+	percent: true
+}, {
+	label: "草元素伤害加成",
+	baseCode: 43,
+	percent: true
+}, {
+	label: "风元素伤害加成",
+	baseCode: 44,
+	percent: true
+}, {
+	label: "岩元素伤害加成",
+	baseCode: 45,
+	percent: true
+}, {
+	label: "冰元素伤害加成",
+	baseCode: 46,
+	percent: true
+} ]
+
 export class EnKa {
 	private readonly artifact: ApiType.EnKaArtifact;
 	
@@ -57,6 +146,7 @@ export class EnKa {
 				updateTime: new Date().getTime(),
 				level: chara.propMap['4001'].val * 1,
 				fetter: chara.fetterInfo.expLevel,
+				overview: this.getOverviewAttr( chara.fightPropMap ),
 				weapon: this.getWeapon( chara.equipList ),
 				artifact: this.getArtifact( chara.equipList ),
 				talent: chara.talentIdList ? <number>chara.talentIdList.length : 0,
@@ -67,6 +157,43 @@ export class EnKa {
 			nickname: data.playerInfo.nickname,
 			avatars,
 		}
+	}
+	
+	private getOverviewAttr( data: Record<string, number> ): ApiType.Overview[] {
+		const attrList: ApiType.Overview[] = [];
+		for ( const attr of attrOverviewMap ) {
+			const base = data[attr.baseCode];
+			
+			if ( !base ) continue;
+			
+			const add = attr.addCode && data[attr.addCode] ? data[attr.addCode] : 0;
+			const percent = attr.percentCode && data[attr.percentCode] ? data[attr.percentCode] : 0;
+			const max = attr.maxCode && data[attr.maxCode] ? data[attr.maxCode] : 0;
+			
+			/* 获取结果值 */
+			const resultValue = max || ( base + add ) * ( 1 + percent );
+			
+			/* 计算新增值 */
+			const extraValue = max || add || percent
+				? max
+					? max - base
+					: resultValue - base
+				: 0
+			
+			/* 整理结果数值 */
+			const getResult = ( value: number ): string => {
+				if ( !value ) return "";
+				return attr.percent ? ( value * 100 ).toFixed( 1 ) + '%' : value.toFixed( 0 );
+			};
+			
+			attrList.push( {
+				attr: attr.label,
+				baseValue: getResult( base ),
+				extraValue: getResult( extraValue ),
+				resultValue: getResult( resultValue )
+			} )
+		}
+		return attrList;
 	}
 	
 	/* 获取武器信息 */
