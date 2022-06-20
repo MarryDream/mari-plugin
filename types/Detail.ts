@@ -81,6 +81,7 @@ export interface Avatar {
 /**
  * @interface
  * 圣遗物信息
+ * @shirtId 套装id
  * @shirtName 套装名称
  * @artifactName 单件名称
  * @level 等级
@@ -88,6 +89,7 @@ export interface Avatar {
  * @subAttr 副属性信息组
  */
 export interface Artifact {
+	shirtId: string;
 	shirtName: string;
 	artifactName: string;
 	rank: number;

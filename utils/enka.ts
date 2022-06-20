@@ -1,4 +1,5 @@
 import * as ApiType from "#mari-plugin/types";
+import { artifactId } from "#mari-plugin/init";
 
 /**
  * @interface
@@ -171,7 +172,7 @@ export class EnKa {
 			const max = attr.maxCode && data[attr.maxCode] ? data[attr.maxCode] : 0;
 			
 			/* 获取结果值 */
-			const resultValue = max || (base * ( 1 + percent ) + add);
+			const resultValue = max || ( base * ( 1 + percent ) + add );
 			
 			/* 计算新增值 */
 			const extraValue = max || add || percent
@@ -229,12 +230,14 @@ export class EnKa {
 			if ( !artIdx ) continue;
 			
 			const artShirtName = this.meta[flat.setNameTextMapHash] || "";
+			const artShirtId = artifactId.map[artShirtName] || "";
 			
 			const artInfo = this.artifact[artShirtName];
 			const artSet = artInfo.sets[artIdx];
 			
 			const artIndex = parseInt( <string>artIdx.split( "arti" ).pop() ) - 1;
 			ret[artIndex] = {
+				shirtId: artShirtId,
 				shirtName: artShirtName,
 				artifactName: artSet.name,
 				rank: flat?.rankLevel || 1,

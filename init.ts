@@ -10,6 +10,7 @@ import { Renderer } from "@modules/renderer";
 
 export let config: MariPluginConfig
 export let renderer: Renderer;
+export const artifactId = new m.ArtifactId();
 export const enKaClass = new m.EnKaClass();
 
 export const configFileName = "mari_plugin"
