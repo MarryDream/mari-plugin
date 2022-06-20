@@ -139,7 +139,7 @@ export class EnKa {
 	
 	/* 获取用户数据 */
 	public getDetailInfo( data: any ): ApiType.Detail {
-		const avatars: ApiType.Avatar[] = data.avatarInfoList.map( chara => {
+		const avatars: ApiType.Avatar[] = data.avatarInfoList?.map( chara => {
 			const avatarId = chara["avatarId"];
 			return {
 				id: avatarId,
@@ -171,7 +171,7 @@ export class EnKa {
 			const max = attr.maxCode && data[attr.maxCode] ? data[attr.maxCode] : 0;
 			
 			/* 获取结果值 */
-			const resultValue = max || ( base + add ) * ( 1 + percent );
+			const resultValue = max || (base * ( 1 + percent ) + add);
 			
 			/* 计算新增值 */
 			const extraValue = max || add || percent
@@ -237,6 +237,7 @@ export class EnKa {
 			ret[artIndex] = {
 				shirtName: artShirtName,
 				artifactName: artSet.name,
+				rank: flat?.rankLevel || 1,
 				level: Math.min( 20, ( reliquary?.level || 1 ) - 1 ),
 				mainAttr: this.getArtInfo( flat.reliquaryMainstat ),
 				subAttr: sub.map( s => this.getArtInfo( s ) )

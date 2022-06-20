@@ -90,6 +90,7 @@ export interface Avatar {
 export interface Artifact {
 	shirtName: string;
 	artifactName: string;
+	rank: number;
 	level: number;
 	mainAttr: ArtAttr;
 	subAttr: ArtAttr[];
