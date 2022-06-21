@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import { parse } from "yaml";
+import { EnKa, EnKaArtifact, EnKaChara, EnKaMeta } from "#mari-plugin/types";
 
 const __API = {
 	FETCH_ARTIFACT_ID: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/artifact_id.yml",
@@ -14,23 +15,23 @@ export async function getArtifactId(): Promise<Record<string, string>> {
 	return parse( await result.text());
 }
 
-export async function getCharaDetail( uid: number ): Promise<any> {
+export async function getCharaDetail( uid: number ): Promise<EnKa> {
 	const charaDetailApi = __API.FETCH_CHARA_DETAIL.replace( "$", uid.toString() );
 		const result: Response = await fetch( charaDetailApi );
 		return await result.json();
 }
 
-export async function getEnKaArtifact(): Promise<any> {
+export async function getEnKaArtifact(): Promise<EnKaArtifact> {
 		const result: Response = await fetch( __API.FETCH_ENKA_ARTIFACT );
 		return parse( await result.text() );
 }
 
-export async function getEnKaChara(): Promise<any> {
+export async function getEnKaChara(): Promise<EnKaChara> {
 		const result: Response = await fetch( __API.FETCH_ENKA_CHARA );
 		return parse( await result.text() );
 }
 
-export async function getEnKaMeta(): Promise<any> {
+export async function getEnKaMeta(): Promise<EnKaMeta> {
 		const result: Response = await fetch( __API.FETCH_ENKA_META );
 		return parse( await result.text() );
 }

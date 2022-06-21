@@ -6,6 +6,11 @@ import { SendFunc } from "@modules/message";
 import * as ApiType from "#mari-plugin/types"
 import { typeData } from "#genshin/init";
 
+export enum ErrorMsg {
+	NOT_FOUND = "请确认「$」已被展示在游戏的角色展柜中，且打开了「显示角色详情」。",
+	FORM_MESSAGE = "EnKa接口报错: "
+}
+
 export async function charaDetailPromise( uid: number, userID: number, charId: number, charName: string, sendMessage: SendFunc ): Promise<void> {
 	const dbKey: string = `mari-plugin.chara-detail-list-${ uid }`;
 	const detailStr: string = await bot.redis.getString( dbKey );
@@ -15,12 +20,16 @@ export async function charaDetailPromise( uid: number, userID: number, charId: n
 	/* 数据库中无数据，前去请求数据 */
 	if ( !detailStr ) {
 		await sendMessage( "初次使用，正在获取数据，请稍后……" );
-		const data = await getCharaDetail( uid );
-		
-		const { meta, chara, artifact } = enKaClass;
-		detail = new EnKa( meta, chara, artifact ).getDetailInfo( data );
-		
-		await bot.redis.setString( dbKey, JSON.stringify( detail ) );
+		try {
+			const data = await getCharaDetail( uid );
+			
+			const { meta, chara, artifact } = enKaClass;
+			detail = new EnKa( meta, chara, artifact ).getDetailInfo( data );
+			
+			await bot.redis.setString( dbKey, JSON.stringify( detail ) );
+		} catch ( error ) {
+			throw ErrorMsg.FORM_MESSAGE + error;
+		}
 	} else {
 		detail = JSON.parse( detailStr );
 	}
@@ -30,7 +39,7 @@ export async function charaDetailPromise( uid: number, userID: number, charId: n
 		return charId === -1 ? a.id === 10000005 || a.id === 10000007 : a.id === charId;
 	} );
 	if ( !currentChara ) {
-		throw `请确认「${ charName }」已被展示在游戏的角色展柜中，且打开了「显示角色详情」。`;
+		throw ErrorMsg.NOT_FOUND.replace( "$", charName );
 	}
 	
 	/* 获取所选角色属性 */

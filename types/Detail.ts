@@ -69,14 +69,16 @@ export interface Avatar {
 	updateTime: number;
 	level: number;
 	fetter: number;
+	overview: Overview[];
 	weapon: Weapon;
 	artifact: {
-		list: Artifact;
+		list: ( Artifact | {} )[];
 		effects: Effect[];
 	};
 	talent: number;
 	skill: Skill;
 }
+
 
 /**
  * @interface
@@ -107,15 +109,15 @@ export interface Artifact {
  * @resultValue 结果值
  */
 export interface Overview {
-	attr: string,
-	baseValue: string,
-	extraValue: string,
-	resultValue: string
+	attr: string;
+	baseValue: string;
+	extraValue: string;
+	resultValue: string;
 }
 
-export type Skill = Record<string, SkillInfo>
+export type Skill = Record<string, SkillInfo>;
 
 export interface Detail {
-	nickname: string
+	nickname: string;
 	avatars: Avatar[];
 }

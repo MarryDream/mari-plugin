@@ -34,11 +34,19 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	const realName: string = <string>result.info;
 	
 	const charID: number = characterID.map[realName];
+	
+	/* 因无法获取属性，排除旅行者 */
+	if ( charID === -1 ) {
+		await sendMessage( `暂不支持查看「${ realName }」的面板详细信息` );
+		return;
+	}
+	
 	const uid: number = info;
 	
 	try {
 		await charaDetailPromise( uid, userID, charID, realName, sendMessage );
 	} catch ( error ) {
+		logger.error( error );
 		await sendMessage( <string>error );
 		return;
 	}

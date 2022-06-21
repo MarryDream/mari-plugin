@@ -139,13 +139,14 @@ export class EnKa {
 	}
 	
 	/* 获取用户数据 */
-	public getDetailInfo( data: any ): ApiType.Detail {
-		const avatars: ApiType.Avatar[] = data.avatarInfoList?.map( chara => {
+	public getDetailInfo( data: ApiType.EnKa ): ApiType.Detail {
+		const avatars: ApiType.Avatar[] = data.avatarInfoList.map( chara => {
 			const avatarId = chara["avatarId"];
+			const level: string | undefined = chara.propMap['4001'].val;
 			return {
 				id: avatarId,
 				updateTime: new Date().getTime(),
-				level: chara.propMap['4001'].val * 1,
+				level: level ? parseInt( level ) : 0,
 				fetter: chara.fetterInfo.expLevel,
 				overview: this.getOverviewAttr( chara.fightPropMap ),
 				weapon: this.getWeapon( chara.equipList ),
@@ -198,8 +199,12 @@ export class EnKa {
 	}
 	
 	/* 获取武器信息 */
-	private getWeapon( data: any[] ): ApiType.Weapon {
-		const { weapon, flat } = data.find( d => d.flat?.itemType === "ITEM_WEAPON" );
+	private getWeapon( data: Array<ApiType.EnKaEquip> ): ApiType.Weapon {
+		const weaponData = data.find( d => d.flat.itemType === "ITEM_WEAPON" );
+		if ( !weaponData ) {
+			throw new Error("enka获取武器数据异常");
+		}
+		const { weapon, flat } = <ApiType.EnKaWeaponEquip>weaponData;
 		const attrs: ApiType.ArtAttr[] = flat.weaponStats.map( s => {
 			return this.getArtInfo( s );
 		} );
@@ -215,14 +220,17 @@ export class EnKa {
 	}
 	
 	/* 获取圣遗物信息 */
-	private getArtifact( data: any[] ): { list: Array<ApiType.Artifact | {}>, effects: Array<ApiType.Effect> } {
+	private getArtifact( data: Array<ApiType.EnKaEquip> ): { list: Array<ApiType.Artifact | {}>, effects: Array<ApiType.Effect> } {
 		/* 圣遗物属性对象 */
 		const ret: Array<ApiType.Artifact | {}> = new Array( 5 ).fill( {} );
 		
 		/* 统计圣遗物套装 */
 		const tmpSetBucket: Record<string, any> = {};
+
+		/* 过滤武器对象 */
+		const reliquaryData = <ApiType.EnKaReliquaryEquip[]>data.filter( d => d.flat.itemType !== "ITEM_WEAPON" );
 		
-		for ( const { flat, reliquary } of data ) {
+		for ( const { flat, reliquary } of reliquaryData ) {
 			/* 圣遗物属性列表 */
 			const sub: { appendPropId: string; statValue: number }[] = flat.reliquarySubstats;
 			/* 圣遗物部位编号 */
@@ -272,7 +280,7 @@ export class EnKa {
 	}
 	
 	/* 获取天赋信息 */
-	private getSkill( charId: string, skillLevelMap: Record<string, number>, extSkillLevelMap: Record<string, number> = {} ): ApiType.Skill {
+	private getSkill( charId: number, skillLevelMap: Record<string, number>, extSkillLevelMap: Record<string, number> = {} ): ApiType.Skill {
 		let { Skills, ProudMap } = this.chara[charId];
 		let idx = 1;
 		/* 映射对象，a 普攻 s 战技 e 爆发 */
