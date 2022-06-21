@@ -1,5 +1,5 @@
 import * as ApiType from "#mari-plugin/types";
-import { artifactId } from "#mari-plugin/init";
+import { artifactId, characterId } from "#mari-plugin/init";
 
 /**
  * @interface
@@ -145,7 +145,7 @@ export class EnKa {
 			const level: string | undefined = chara.propMap['4001'].val;
 			return {
 				id: avatarId,
-				updateTime: new Date().getTime(),
+				name: characterId.idMap[avatarId],
 				level: level ? parseInt( level ) : 0,
 				fetter: chara.fetterInfo.expLevel,
 				overview: this.getOverviewAttr( chara.fightPropMap ),
@@ -158,6 +158,7 @@ export class EnKa {
 		return {
 			nickname: data.playerInfo.nickname,
 			avatars,
+			updateTime: new Date().getTime()
 		}
 	}
 	
@@ -202,7 +203,7 @@ export class EnKa {
 	private getWeapon( data: Array<ApiType.EnKaEquip> ): ApiType.Weapon {
 		const weaponData = data.find( d => d.flat.itemType === "ITEM_WEAPON" );
 		if ( !weaponData ) {
-			throw new Error("enka获取武器数据异常");
+			throw new Error( "enka获取武器数据异常" );
 		}
 		const { weapon, flat } = <ApiType.EnKaWeaponEquip>weaponData;
 		const attrs: ApiType.ArtAttr[] = flat.weaponStats.map( s => {

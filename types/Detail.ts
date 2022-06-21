@@ -56,7 +56,7 @@ export interface Effect {
  * @interface
  * 角色信息
  * @id 角色编号
- * @updateTime 更新日期(时间戳)
+ * @name 角色名
  * @level 等级
  * @fetter 好感度
  * @weapon 武器信息
@@ -66,7 +66,7 @@ export interface Effect {
  */
 export interface Avatar {
 	id: number;
-	updateTime: number;
+	name: string;
 	level: number;
 	fetter: number;
 	overview: Overview[];
@@ -120,4 +120,5 @@ export type Skill = Record<string, SkillInfo>;
 export interface Detail {
 	nickname: string;
 	avatars: Avatar[];
+	updateTime: number;
 }

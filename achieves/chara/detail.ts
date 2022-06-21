@@ -1,10 +1,12 @@
 import { BOT } from "@modules/bot";
 import { InputParameter } from "@modules/command";
 import { getRealName, NameResult } from "#genshin/utils/name";
-import { characterID } from "#genshin/init";
+import { characterId } from "#mari-plugin/init";
 import { renderer } from "#mari-plugin/init";
-import { charaDetailPromise } from "#mari-plugin/utils/promise";
+import { charaDetailPromise, ErrorMsg } from "#mari-plugin/utils/promise";
 import { RenderResult } from "@modules/renderer";
+import * as ApiType from "#mari-plugin/types";
+import { typeData } from "#genshin/init";
 
 async function getUID( userID: number, redis: BOT["redis"] ): Promise<number | string> {
 	const uid: string = await redis.getString( `silvery-star.user-bind-uid-${ userID }` );
@@ -33,7 +35,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	}
 	const realName: string = <string>result.info;
 	
-	const charID: number = characterID.map[realName];
+	const charID: number = characterId.map[realName];
 	
 	/* 因无法获取属性，排除旅行者 */
 	if ( charID === -1 ) {
@@ -43,13 +45,38 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	
 	const uid: number = info;
 	
+	let detail: ApiType.Detail;
+	
 	try {
-		await charaDetailPromise( uid, userID, charID, realName, sendMessage );
+		detail = await charaDetailPromise( uid, userID, sendMessage, false );
 	} catch ( error ) {
-		logger.error( error );
-		await sendMessage( <string>error );
+		if ( typeof error === "string" ) {
+			await sendMessage( <string>error );
+		} else {
+			logger.error( error );
+		}
 		return;
 	}
+	
+	/* 获取所选角色的信息 */
+	const currentChara = detail.avatars.find( a => {
+		return charID === -1 ? a.id === 10000005 || a.id === 10000007 : a.id === charID;
+	} );
+	
+	if ( !currentChara ) {
+		await sendMessage( ErrorMsg.NOT_FOUND.replace( "$", realName ) );
+		return;
+	}
+	
+	/* 获取所选角色属性 */
+	const element = typeData.character[realName] === "!any!" ? "none" : typeData.character[realName];
+	
+	await redis.setString( `mari-plugin.chara-detail-${ userID }`, JSON.stringify( {
+		uid,
+		username: detail.nickname,
+		element,
+		...currentChara
+	} ) );
 	
 	const res: RenderResult = await renderer.asCqCode(
 		"/chara-detail.html", { qq: userID } );
