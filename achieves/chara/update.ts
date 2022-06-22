@@ -18,17 +18,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 		return;
 	}
 	
-	await sendMessage( "开始更新面板数据，请稍后……" );
-	
 	const uid: number = info;
-	
-	const dbKey: string = `mari-plugin.chara-detail-list-${ uid }`;
-	
-	const detailStr: string = await redis.getString( dbKey );
-	const oldDetail: ApiType.Detail | null = detailStr ? JSON.parse( detailStr ) : null;
-	
-	/* 获取旧头像列表 */
-	let oldAvatars: ApiType.Avatar[] = oldDetail ? oldDetail.avatars : [];
 	
 	let detail: ApiType.Detail;
 	
@@ -43,13 +33,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 		return;
 	}
 	
-	const newAvatarNames: string = detail.avatars.map( a => a.name ).join( '，' );
+	const avatarNames: string = detail.avatars.map( a => a.name ).join( '，' );
 	
-	/* 组装新旧头像 */
-	oldAvatars = oldAvatars.filter( oa => detail.avatars.findIndex( na => oa.id === na.id ) === -1 );
-	detail.avatars = detail.avatars.concat( oldAvatars );
-	
-	await redis.setString( dbKey, JSON.stringify( detail ) );
-	
-	await sendMessage( `更新面板数据成功，本次更新角色列表为：${ newAvatarNames }` );
+	await sendMessage( `更新面板数据成功，当前可查询角色列表为：${ avatarNames }` );
 }
