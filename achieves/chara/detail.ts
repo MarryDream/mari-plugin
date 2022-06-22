@@ -1,24 +1,58 @@
-import { BOT } from "@modules/bot";
 import { InputParameter } from "@modules/command";
 import { getRealName, NameResult } from "#genshin/utils/name";
-import { characterId } from "#mari-plugin/init";
-import { renderer } from "#mari-plugin/init";
+import { characterId, renderer } from "#mari-plugin/init";
 import { charaDetailPromise, ErrorMsg } from "#mari-plugin/utils/promise";
 import { RenderResult } from "@modules/renderer";
 import * as ApiType from "#mari-plugin/types";
 import { typeData } from "#genshin/init";
+import Database from "../../../../modules/database";
 
-async function getUID( userID: number, redis: BOT["redis"] ): Promise<number | string> {
-	const uid: string = await redis.getString( `silvery-star.user-bind-uid-${ userID }` );
-	return uid.length ? parseInt( uid ) : "您还未绑定游戏UID";
+interface UIDResult {
+	info: number | string;
+	stranger: boolean;
+	self: boolean;
+}
+
+function isAt( message: string ): string | undefined {
+	const res: RegExpExecArray | null = /\[cq:at,qq=(?<id>\d+)/.exec( message );
+	return res?.groups?.id;
+}
+
+async function getUID( data: string, userID: number, redis: Database, atID?: string ): Promise<UIDResult> {
+	if ( !data ) {
+		const uid: string = await redis.getString( `silvery-star.user-bind-uid-${ userID }` );
+		const info = uid.length === 0 ? "您还未绑定游戏UID" : parseInt( uid );
+		return { info, stranger: false, self: true };
+	} else if ( atID ) {
+		const uid: string = await redis.getString( `silvery-star.user-bind-uid-${ atID }` );
+		const info = uid.length === 0 ? `用户 ${ atID } 未绑定游戏UID` : parseInt( uid );
+		return { info, stranger: false, self: false };
+	} else {
+		return { info: parseInt( data ), stranger: true, self: false };
+	}
 }
 
 export async function main( { sendMessage, messageData, redis, logger }: InputParameter ): Promise<void> {
-	const name: string = messageData.raw_message;
+	const msg: string = messageData.raw_message;
+	
+	const parser = /(\d{9})?\s*(\[CQ:at,qq=\d+.*])?\s*([\u4e00-\u9fa5]+)/i;
+	const execRes = parser.exec( msg );
+	if ( !execRes ) {
+		await sendMessage( "指令格式有误" );
+		return;
+	}
+	
+	const reg = execRes;
+	const [ , uidStr, atMsg, name ] = reg;
+	
+	console.log( uidStr, atMsg, name )
+	
+	const atID: string | undefined = isAt( atMsg );
 	const userID: number = messageData.user_id;
 	
 	/* 检查是否绑定了uid */
-	const info = await getUID( userID, redis );
+	const { info, stranger, self } = await getUID( uidStr, userID, redis, atID );
+	console.log( info )
 	if ( typeof info === "string" ) {
 		await sendMessage( info );
 		return;
@@ -44,11 +78,12 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	}
 	
 	const uid: number = info;
+	const target: number = atID ? parseInt( atID ) : userID;
 	
 	let detail: ApiType.Detail;
 	
 	try {
-		detail = await charaDetailPromise( uid, userID, sendMessage, false );
+		detail = await charaDetailPromise( uid, self, sendMessage, false );
 	} catch ( error ) {
 		if ( typeof error === "string" ) {
 			await sendMessage( <string>error );
@@ -65,14 +100,15 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	} );
 	
 	if ( !currentChara ) {
-		await sendMessage( ErrorMsg.NOT_FOUND.replace( "$", realName ) );
+		const errorMsg = self ? ErrorMsg.SELF_NOT_FOUND : ErrorMsg.NOT_FOUND;
+		await sendMessage( errorMsg.replace( "$", realName ) );
 		return;
 	}
 	
 	/* 获取所选角色属性 */
 	const element = typeData.character[realName] === "!any!" ? "none" : typeData.character[realName];
 	
-	await redis.setString( `mari-plugin.chara-detail-${ userID }`, JSON.stringify( {
+	await redis.setString( `mari-plugin.chara-detail-${ target }`, JSON.stringify( {
 		uid,
 		username: detail.nickname,
 		element,
@@ -80,7 +116,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	} ) );
 	
 	const res: RenderResult = await renderer.asCqCode(
-		"/chara-detail.html", { qq: userID } );
+		"/chara-detail.html", { qq: target, stranger } );
 	if ( res.code === "ok" ) {
 		await sendMessage( res.data );
 	} else {

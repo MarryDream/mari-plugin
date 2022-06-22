@@ -3,10 +3,13 @@ import { PluginSetting } from "@modules/plugin";
 
 const panelDetail: OrderConfig = {
 	type: "order",
-	cmdKey: "seto-mari.panel-detail",
-	desc: [ "角色详情", "[角色]" ],
-	headers: [ "panel_detail" ],
-	regexps: [ "[\\w\\u4e00-\\u9fa5]+" ],
+	cmdKey: "seto-mari.panel",
+	desc: [ "角色详情", "(UID|@)[角色]" ],
+	headers: [ "panel" ],
+	regexps: [
+		[ "(\\d{9})?", "[\\u4e00-\\u9fa5]+" ],
+		[ "\\[CQ:at,qq=\\d+.*]?", "[\\u4e00-\\u9fa5]+" ]
+	],
 	main: "achieves/chara/detail",
 	detail: "展示看板角色详情，游戏中将角色放入看板并打开\"显示详细信息\"才可查询"
 };
@@ -14,7 +17,7 @@ const panelDetail: OrderConfig = {
 const panelUpdate: OrderConfig = {
 	type: "order",
 	cmdKey: "seto-mari.panel-update",
-	desc: [ "更新面板", "(-c)" ],
+	desc: [ "更新详情", "(-c)" ],
 	headers: [ "panel_update" ],
 	regexps: [ "(-c)?" ],
 	main: "achieves/chara/update",

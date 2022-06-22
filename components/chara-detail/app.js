@@ -150,7 +150,10 @@ export default defineComponent( {
 			}
 		} ) )
 		
-		const userAvatar = computed( () => `https://q1.qlogo.cn/g?b=qq&s=640&nk=${ urlParams.qq }` );
+		/* 获取头像 */
+		const userAvatar = urlParams.stranger === "true"
+			? `https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/character/${ data.id }/face.png`
+			: `https://q1.qlogo.cn/g?b=qq&s=640&nk=${ urlParams.qq }`;
 		
 		const weaponIcon = computed( () => {
 			return `https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/weapon/thumb/${ data.weapon.name }.png`;

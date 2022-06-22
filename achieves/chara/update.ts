@@ -29,7 +29,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	let detail: ApiType.Detail;
 	
 	try {
-		detail = await charaDetailPromise( uid, userID, sendMessage, true );
+		detail = await charaDetailPromise( uid, true, sendMessage, true );
 	} catch ( error ) {
 		if ( typeof error === "string" ) {
 			await sendMessage( <string>error );

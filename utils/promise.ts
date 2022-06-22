@@ -8,8 +8,10 @@ import * as ApiType from "#mari-plugin/types"
 export enum ErrorMsg {
 	ERROR_SERVER = "暂不支持b服用户查询",
 	IS_PENDING = "两次请求间隔较短，请于 $ 后再次尝试",
-	PRIVATE_ACCOUNT = "请在游戏中打开「显示角色详情」后再次尝试。",
-	NOT_FOUND = "请确认「$」已被展示在游戏的角色展柜中。",
+	PRIVATE_ACCOUNT = "对方未开启「显示角色详情」，无法查询",
+	SELF_PRIVATE_ACCOUNT = "请在游戏中打开「显示角色详情」后再次尝试。",
+	NOT_FOUND = "对方未将「$」展示在角色展柜中。",
+	SELF_NOT_FOUND = "请确认「$」已被展示在游戏的角色展柜中。",
 	FORM_MESSAGE = "EnKa接口报错: "
 }
 
@@ -20,7 +22,7 @@ function getLimitTime( differ: number ): string {
 	return `${ min }分${ sec }秒`;
 }
 
-export async function charaDetailPromise( uid: number, userID: number, sendMessage: SendFunc, isUpdate: boolean ): Promise<ApiType.Detail> {
+export async function charaDetailPromise( uid: number, self: boolean, sendMessage: SendFunc, isUpdate: boolean ): Promise<ApiType.Detail> {
 	if ( uid.toString()[0] === "5" ) {
 		throw ErrorMsg.ERROR_SERVER;
 	}
@@ -56,7 +58,7 @@ export async function charaDetailPromise( uid: number, userID: number, sendMessa
 		}
 		
 		if ( !data.avatarInfoList ) {
-			throw ErrorMsg.PRIVATE_ACCOUNT;
+			throw self ? ErrorMsg.SELF_PRIVATE_ACCOUNT : ErrorMsg.PRIVATE_ACCOUNT;
 		}
 		
 		let oldAvatars: ApiType.Avatar[] = detail ? detail.avatars : [];
