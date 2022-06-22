@@ -4,6 +4,7 @@ import { AttrIconMap, EnKa, EnKaArtifact, EnKaChara, EnKaMeta } from "#mari-plug
 
 const __API = {
 	FETCH_ARTIFACT_ID: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/artifact_id.yml",
+	// https://enka.shinshin.moe/
 	FETCH_CHARA_DETAIL: "https://enka.shinshin.moe/u/$/__data.json",
 	FETCH_ENKA_ARTIFACT: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/artifact.yml",
 	FETCH_ENKA_CHARA: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/chara.yml",

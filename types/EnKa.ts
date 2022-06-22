@@ -1,3 +1,5 @@
+// https://enka.shinshin.moe/
+
 export type EnKaEquip = EnKaReliquaryEquip | EnKaWeaponEquip
 
 export interface EnKa {
