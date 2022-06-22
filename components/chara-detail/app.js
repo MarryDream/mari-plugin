@@ -13,7 +13,9 @@ const template = `<div class="chara-detail" :class="{ none: data.element === 'no
 		<div class="base-info card">
 			<div v-for="(a, aKey) of data.overview" :key="aKey" class="list-item">
 				<p class="base-info-label">
-					<i class="icon-flower"></i>
+					<svg class="iconpark-icon" :style="{ color: a.color }">
+						<use :href="a.icon"></use>
+					</svg>
 					<span class="label">{{ a.attr }}</span>
 				</p>
 				<p class="base-info-value">
@@ -77,7 +79,9 @@ const template = `<div class="chara-detail" :class="{ none: data.element === 'no
 						</p>
 						<p class="weapon-attr">
 							<p v-for="(a, aKey) of data.weapon.attrs">
-								<i class="icon-flower"></i>
+								<svg class="iconpark-icon" :style="{ color: a.color }">
+									<use :href="a.icon"></use>
+								</svg>
 								<span>{{ a.value }}</span>
 							</p>
 						</p>

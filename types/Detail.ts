@@ -3,10 +3,14 @@
  * 圣遗物属性信息
  * @attr 圣遗物属性名
  * @value 圣遗物属性值
+ * @icon iconPark图标
+ * @color 图标颜色
  */
 export interface ArtAttr {
 	attr: string;
 	value: string;
+	icon: string;
+	color: string;
 }
 
 /**
@@ -104,12 +108,16 @@ export interface Artifact {
  * @interface
  * 角色面板数据
  * @attr 属性名
+ * @icon iconPark图标
+ * @color 图标颜色
  * @baseValue 基础值
  * @addValue 增加值
  * @resultValue 结果值
  */
 export interface Overview {
 	attr: string;
+	icon: string;
+	color: string;
 	baseValue: string;
 	extraValue: string;
 	resultValue: string;

@@ -1,5 +1,5 @@
 import * as ApiType from "#mari-plugin/types";
-import { artifactId, characterId } from "#mari-plugin/init";
+import { artifactId, attrIcon, characterId } from "#mari-plugin/init";
 
 /**
  * @interface
@@ -59,7 +59,7 @@ const attrOverviewMap: IAttrOverviewMap[] = [ {
 	maxCode: 2000,
 	percent: false
 }, {
-	label: "基础攻击力",
+	label: "攻击力",
 	baseCode: 4,
 	percentCode: 6,
 	addCode: 5,
@@ -191,6 +191,8 @@ export class EnKa {
 			
 			attrList.push( {
 				attr: attr.label,
+				icon: attrIcon.map[attr.label]?.icon,
+				color: attrIcon.map[attr.label]?.color || "",
 				baseValue: getResult( base ),
 				extraValue: getResult( extraValue ),
 				resultValue: getResult( resultValue )
@@ -227,7 +229,7 @@ export class EnKa {
 		
 		/* 统计圣遗物套装 */
 		const tmpSetBucket: Record<string, any> = {};
-
+		
 		/* 过滤武器对象 */
 		const reliquaryData = <ApiType.EnKaReliquaryEquip[]>data.filter( d => d.flat.itemType !== "ITEM_WEAPON" );
 		
@@ -334,18 +336,23 @@ export class EnKa {
 		let propId = data.appendPropId || data.mainPropId || "";
 		propId = propId.replace( "FIGHT_PROP_", "" );
 		
-		if ( !attrMap[propId] ) {
+		const attrName = attrMap[propId];
+		if ( !attrName ) {
 			return {
 				attr: "",
-				value: ""
+				value: "",
+				icon: "",
+				color: ""
 			}
 		}
 		
 		const percentMark = attrNoPercent.includes( propId ) ? "" : "%";
 		
 		return {
-			attr: attrMap[propId],
-			value: data.statValue.toString() + percentMark
+			attr: attrName,
+			value: data.statValue.toString() + percentMark,
+			icon: attrIcon.map[attrName]?.icon,
+			color: attrIcon.map[attrName]?.color || "",
 		}
 	}
 }

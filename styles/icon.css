@@ -5,6 +5,14 @@
 	url('../public/iconfont/iconfont.ttf?t=1646450698007') format('truetype');
 }
 
+.iconpark-icon {
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.15em;
+	fill: currentColor;
+	overflow: hidden;
+}
+
 [class^="icon-"], [class*=" icon-"]  {
 	font-family: "iconfont" !important;
 	font-size: 16px;

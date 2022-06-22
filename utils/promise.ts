@@ -67,7 +67,6 @@ export async function charaDetailPromise( uid: number, userID: number, sendMessa
 		if ( isUpdate ) {
 			/* 组装新旧头像 */
 			oldAvatars = oldAvatars.filter( oa => detail!.avatars.findIndex( na => oa.id === na.id ) === -1 );
-			console.log( oldAvatars )
 			detail.avatars = detail.avatars.concat( oldAvatars );
 		}
 		await bot.redis.setString( dbKeyTimeout, detail.updateTime );

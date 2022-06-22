@@ -39,6 +39,18 @@ export interface EnKaCharaInfo {
 	}
 }
 
+/**
+ * @interface
+ * 属性图标及颜色映射
+ * @icon iconPark图标
+ * @color 颜色
+ */
+export interface AttrIconInfo {
+	icon: string;
+	color?: string;
+}
+
 export type EnKaArtifact = Record<string, EnKaArtifactInfo>;
 export type EnKaChara = Record<string, EnKaCharaInfo>;
 export type EnKaMeta = Record<string, string>;
+export type AttrIconMap = Record<string, AttrIconInfo>;

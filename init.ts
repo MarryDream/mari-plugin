@@ -13,6 +13,7 @@ export let renderer: Renderer;
 export const artifactId = new m.ArtifactId();
 export const enKaClass = new m.EnKaClass();
 export const characterId = new m.CharacterId();
+export const attrIcon = new m.AttrIcon();
 
 export const configFileName = "mari_plugin"
 
