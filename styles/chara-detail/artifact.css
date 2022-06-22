@@ -55,6 +55,9 @@
 	justify-content: center;
 	width: 100%;
 	height: 100%;
-	font-size: 34px;
 	opacity: .2;
+}
+
+.artifact > .is-empty i {
+	font-size: 60px;
 }

@@ -21,8 +21,8 @@ const template = `<div class="artifact card">
 			<p class="attr-label-value">{{ sub.value }}</p>
 		</div>
 	</template>
-	<div class="is-empty" v-else>
-		<span>EMPTY</span>
+	<div v-else class="is-empty">
+		<i :class="data.typeIcon"></i>
 	</div>
 </div>`
 
@@ -43,11 +43,11 @@ export default defineComponent( {
 		const data = props.data;
 		const position = props.position;
 		
-		const isEmpty = computed( () => !data || Object.keys( data ).length === 0 );
+		const isEmpty = computed( () => !data || Object.keys( data ).length <= 1 );
 		
 		const artifactIcon = computed( () => {
 			if ( !data ) return "";
-			return `https://adachi-bot.oss-cn-beijing.aliyuncs.com/Version2/artifact/${ data.shirtId }/${ position }.png`;
+			return `https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/artifact/${ data.shirtId }/${ position }.png`;
 		} )
 		
 		return {

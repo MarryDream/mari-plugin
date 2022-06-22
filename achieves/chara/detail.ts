@@ -53,6 +53,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 		if ( typeof error === "string" ) {
 			await sendMessage( <string>error );
 		} else {
+			await sendMessage( "整理数据出错，请前往控制台查看错误信息" );
 			logger.error( error );
 		}
 		return;

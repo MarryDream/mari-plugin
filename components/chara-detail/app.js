@@ -54,19 +54,22 @@ const template = `<div class="chara-detail" :class="{ none: data.element === 'no
 			<p class="fetter-info">好感度等级：{{ data.fetter }}</p>
 		</div>
 		<div class="artifact-list">
-			<artifact v-for="(a, aKey) of data.artifact.list" :position="aKey" :key="aKey" :data="a" />
+			<artifact v-for="(a, aKey) of artifacts" :position="aKey" :key="aKey" :data="a" />
 			<div class="extra-info">
 				<div class="artifact-effect card">
 					<i class="icon-flower bg-icon"></i>
-					<p v-for="(e, eKey) of data.artifact.effects">
-						<span>{{ e.count }}件套：</span>
-						<span>{{ e.name }}</span>
-					</p>
+					<template v-if="data.artifact.effects?.length">
+						<p v-for="(e, eKey) of data.artifact.effects">
+							<span>{{ e.count }}件套：</span>
+							<span>{{ e.name }}</span>
+						</p>
+					</template>
+					<p v-else class="artifact-effect-empty">暂无圣遗物套装数据</p>
 				</div>
 				<div class="weapon-card card">
 					<i class="icon-weapon bg-icon"></i>
 					<div class="weapon-icon">
-						<img :src="weaponIcon" alt="data.weapon.name">
+						<img :src="weaponIcon" :alt="data.weapon.name">
 						<p>{{ data.weapon.name }}</p>
 					</div>
 					<div class="weapon-info">
@@ -140,16 +143,18 @@ export default defineComponent( {
 		}
 		
 		/* 给圣遗物添加种类图标 */
-		const artifacts = computed( () => data.artifacts.list.map( ( a, aKey ) => {
+		const artifacts = computed( () => data.artifact.list.map( ( a, aKey ) => {
 			return {
 				...a,
 				typeIcon: artifactsFontIcon[aKey]
 			}
 		} ) )
 		
-		const weaponIcon = computed( () => `https://adachi-bot.oss-cn-beijing.aliyuncs.com/Version2/thumb/weapon/${ data.weapon.name }.png` )
-		
 		const userAvatar = computed( () => `https://q1.qlogo.cn/g?b=qq&s=640&nk=${ urlParams.qq }` );
+		
+		const weaponIcon = computed( () => {
+			return `https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/weapon/thumb/${ data.weapon.name }.png`;
+		} );
 		
 		const portrait = computed( () => {
 			return `https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/character/${ data.id }/gacha_splash.png`;

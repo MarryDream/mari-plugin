@@ -211,13 +211,14 @@ export class EnKa {
 		const attrs: ApiType.ArtAttr[] = flat.weaponStats.map( s => {
 			return this.getArtInfo( s );
 		} );
+		const affixValues = weapon.affixMap ? Object.values( weapon.affixMap ) : [ 0 ];
 		
 		return {
 			name: this.meta[flat.nameTextMapHash],
 			star: flat.rankLevel,
 			level: weapon.level,
 			promote: weapon.promoteLevel,
-			affix: ( <number>Object.values( weapon.affixMap )[0] || 0 ) + 1,
+			affix: ( affixValues[0] || 0 ) + 1,
 			attrs
 		}
 	}
@@ -234,8 +235,6 @@ export class EnKa {
 		const reliquaryData = <ApiType.EnKaReliquaryEquip[]>data.filter( d => d.flat.itemType !== "ITEM_WEAPON" );
 		
 		for ( const { flat, reliquary } of reliquaryData ) {
-			/* 圣遗物属性列表 */
-			const sub: { appendPropId: string; statValue: number }[] = flat.reliquarySubstats;
 			/* 圣遗物部位编号 */
 			const artIdx = artiIdx[flat.equipType];
 			if ( !artIdx ) continue;
@@ -246,6 +245,9 @@ export class EnKa {
 			const artInfo = this.artifact[artShirtName];
 			const artSet = artInfo.sets[artIdx];
 			
+			/* 圣遗物属性列表 */
+			const sub = flat.reliquarySubstats;
+			
 			const artIndex = parseInt( <string>artIdx.split( "arti" ).pop() ) - 1;
 			ret[artIndex] = {
 				shirtId: artShirtId,
@@ -254,7 +256,7 @@ export class EnKa {
 				rank: flat?.rankLevel || 1,
 				level: Math.min( 20, ( reliquary?.level || 1 ) - 1 ),
 				mainAttr: this.getArtInfo( flat.reliquaryMainstat ),
-				subAttr: sub.map( s => this.getArtInfo( s ) )
+				subAttr: sub ? sub.map( s => this.getArtInfo( s ) ) : []
 			}
 			/* 存放圣遗物套装信息 */
 			const t = tmpSetBucket[artShirtName];

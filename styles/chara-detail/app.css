@@ -391,6 +391,12 @@
 	color: #90EE90;
 }
 
+.artifact-effect .artifact-effect-empty {
+	width: 100%;
+	text-align: center;
+	opacity: 0.5;
+}
+
 /* 武器信息 */
 .weapon-card {
 	display: flex;

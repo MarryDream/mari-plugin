@@ -112,12 +112,12 @@ interface Reliquary {
  * 角色装备（武器概览）
  * @level 等级
  * @promoteLevel 突破次数
- * @affixMap 精炼映射表（只有一项，属性值就是精炼次数）
+ * @affixMap 精炼映射表（只有一项，属性值就是精炼次数）低星武器不存在该值
  */
 interface Weapon {
 	level: number;
 	promoteLevel: number;
-	affixMap: Record<string, number>;
+	affixMap?: Record<string, number>;
 }
 
 /**
@@ -127,7 +127,7 @@ interface Weapon {
  * @setNameTextMapHash 套装属性id
  * @rankLevel 星级
  * @reliquaryMainstat 主属性信息
- * @reliquarySubstats 副属性信息
+ * @reliquarySubstats 副属性信息（一星圣遗物可能会没有）
  * @itemType 装备类型
  * @equipType 圣遗物类型
  */
@@ -139,7 +139,7 @@ export interface EnKaFlatReliquary {
 		mainPropId: string;
 		statValue: number;
 	};
-	reliquarySubstats: Array<{
+	reliquarySubstats?: Array<{
 		appendPropId: string;
 		statValue: number;
 	}>;
