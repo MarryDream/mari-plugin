@@ -20,6 +20,12 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	
 	const uid: number = info;
 	
+	if ( messageData.raw_message === "-c" ) {
+		await redis.deleteKey( `mari-plugin.chara-detail-list-${ uid }` );
+		await sendMessage( `「${ uid }」的面板存储数据已清空` );
+		return;
+	}
+	
 	let detail: ApiType.Detail;
 	
 	try {

@@ -26,15 +26,18 @@ export async function charaDetailPromise( uid: number, userID: number, sendMessa
 	}
 	
 	const dbKey: string = `mari-plugin.chara-detail-list-${ uid }`;
+	const dbKeyTimeout: string = `ari-plugin.chara-detail-time-${ uid }`;
+	
 	const detailStr: string = await bot.redis.getString( dbKey );
+	const updateTime: string = await bot.redis.getString( dbKeyTimeout );
 	
 	const limitWait: number = 5 * 60 * 1000;
 	
 	let detail: ApiType.Detail | null = detailStr ? JSON.parse( detailStr ) : null;
 	
 	/* 检查是否频繁请求 */
-	if ( detail && isUpdate ) {
-		const differ = new Date().getTime() - detail.updateTime;
+	if ( updateTime && ( isUpdate || ( !isUpdate && !detail ) ) ) {
+		const differ = new Date().getTime() - parseInt( updateTime );
 		if ( differ <= limitWait ) {
 			const limit = getLimitTime( limitWait - differ );
 			throw ErrorMsg.IS_PENDING.replace( "$", limit );
@@ -42,7 +45,7 @@ export async function charaDetailPromise( uid: number, userID: number, sendMessa
 	}
 	
 	if ( !detail || isUpdate ) {
-		const startMsg = isUpdate ? "开始更新面板数据，请稍后……" : "初次使用，正在获取数据，请稍后……";
+		const startMsg = isUpdate ? "开始更新面板数据，请稍后……" : "正在获取数据，请稍后……";
 		await sendMessage( startMsg );
 		
 		let data: ApiType.EnKa;
@@ -53,7 +56,7 @@ export async function charaDetailPromise( uid: number, userID: number, sendMessa
 		}
 		
 		if ( !data.avatarInfoList ) {
-			throw ErrorMsg.PRIVATE_ACCOUNT
+			throw ErrorMsg.PRIVATE_ACCOUNT;
 		}
 		
 		let oldAvatars: ApiType.Avatar[] = detail ? detail.avatars : [];
@@ -64,9 +67,10 @@ export async function charaDetailPromise( uid: number, userID: number, sendMessa
 		if ( isUpdate ) {
 			/* 组装新旧头像 */
 			oldAvatars = oldAvatars.filter( oa => detail!.avatars.findIndex( na => oa.id === na.id ) === -1 );
-			console.log(oldAvatars)
+			console.log( oldAvatars )
 			detail.avatars = detail.avatars.concat( oldAvatars );
 		}
+		await bot.redis.setString( dbKeyTimeout, detail.updateTime );
 		await bot.redis.setString( dbKey, JSON.stringify( detail ) );
 	}
 	return detail
