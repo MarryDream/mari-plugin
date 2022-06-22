@@ -45,14 +45,12 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	const reg = execRes;
 	const [ , uidStr, atMsg, name ] = reg;
 	
-	console.log( uidStr, atMsg, name )
-	
 	const atID: string | undefined = isAt( atMsg );
 	const userID: number = messageData.user_id;
 	
 	/* 检查是否绑定了uid */
-	const { info, stranger, self } = await getUID( uidStr, userID, redis, atID );
-	console.log( info )
+	const { info, stranger, self } = await getUID( uidStr || atMsg, userID, redis, atID );
+	
 	if ( typeof info === "string" ) {
 		await sendMessage( info );
 		return;
