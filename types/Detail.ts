@@ -67,6 +67,7 @@ export interface Effect {
  * @artifact 圣遗物信息
  * @talent 命座层数
  * @skill 天赋信息
+ * @updateTime 更新时间
  */
 export interface Avatar {
 	id: number;
@@ -81,6 +82,7 @@ export interface Avatar {
 	};
 	talent: number;
 	skill: Skill;
+	updateTime: number;
 }
 
 
@@ -128,5 +130,4 @@ export type Skill = Record<string, SkillInfo>;
 export interface Detail {
 	nickname: string;
 	avatars: Avatar[];
-	updateTime: number;
 }

@@ -155,13 +155,13 @@ export class EnKa {
 				weapon: this.getWeapon( chara.equipList ),
 				artifact: this.getArtifact( chara.equipList ),
 				talent: chara.talentIdList ? <number>chara.talentIdList.length : 0,
-				skill: this.getSkill( avatarId, chara.skillLevelMap, chara.proudSkillExtraLevelMap )
+				skill: this.getSkill( avatarId, chara.skillLevelMap, chara.proudSkillExtraLevelMap ),
+				updateTime: new Date().getTime()
 			}
 		} )
 		return {
 			nickname: data.playerInfo.nickname,
 			avatars,
-			updateTime: new Date().getTime()
 		}
 	}
 	

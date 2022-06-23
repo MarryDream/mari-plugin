@@ -59,6 +59,8 @@ export async function charaDetailPromise( uid: number, self: boolean, sendMessag
 			throw ErrorMsg.FORM_MESSAGE + error;
 		}
 		
+		await bot.redis.setString( dbKeyTimeout, new Date().getTime() );
+		
 		/* 未展示任何角色 */
 		if ( !data.playerInfo.showAvatarInfoList ) {
 			throw self ? ErrorMsg.SELF_PANEL_EMPTY : ErrorMsg.PANEL_EMPTY;
@@ -79,7 +81,6 @@ export async function charaDetailPromise( uid: number, self: boolean, sendMessag
 			oldAvatars = oldAvatars.filter( oa => detail!.avatars.findIndex( na => oa.id === na.id ) === -1 );
 			detail.avatars = detail.avatars.concat( oldAvatars );
 		}
-		await bot.redis.setString( dbKeyTimeout, detail.updateTime );
 		await bot.redis.setString( dbKey, JSON.stringify( detail ) );
 	}
 	return detail
