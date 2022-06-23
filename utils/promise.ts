@@ -14,7 +14,8 @@ export enum ErrorMsg {
 	SELF_NOT_FOUND = "请确认「$」已被展示在游戏的角色展柜中。",
 	PANEL_EMPTY = "对方未再展示柜中添加任何角色",
 	SELF_PANEL_EMPTY = "请在角色展柜中设置需要展示的角色",
-	FORM_MESSAGE = "EnKa接口报错: "
+	FORM_MESSAGE = "EnKa接口报错: ",
+	UNKNOWN = "发生未知错误，请尝试重新获取数据"
 }
 
 function getLimitTime( differ: number ): string {
@@ -59,6 +60,10 @@ export async function charaDetailPromise( uid: number, self: boolean, sendMessag
 			throw ErrorMsg.FORM_MESSAGE + error;
 		}
 		
+		if ( !data?.playerInfo ) {
+			throw ErrorMsg.FORM_MESSAGE + "未能成功获取到数据，请重试";
+		}
+		
 		await bot.redis.setString( dbKeyTimeout, new Date().getTime() );
 		
 		/* 未展示任何角色 */
@@ -71,10 +76,15 @@ export async function charaDetailPromise( uid: number, self: boolean, sendMessag
 			throw self ? ErrorMsg.SELF_PRIVATE_ACCOUNT : ErrorMsg.PRIVATE_ACCOUNT;
 		}
 		
-		let oldAvatars: ApiType.Avatar[] = detail ? detail.avatars : [];
+		let oldAvatars: ApiType.Avatar[] = detail?.avatars || [];
 		
 		const { meta, chara, artifact } = enKaClass;
 		detail = new EnKa( meta, chara, artifact ).getDetailInfo( data );
+		
+		/* 我也不知道为什么有的人报错，总之我先放两行代码在这里 */
+		if ( detail && !detail.avatars ) {
+			throw ErrorMsg.UNKNOWN;
+		}
 		
 		if ( isUpdate ) {
 			/* 组装新旧头像 */

@@ -1,18 +1,15 @@
-import { BOT } from "@modules/bot";
 import { InputParameter } from "@modules/command";
 import { charaDetailPromise } from "#mari-plugin/utils/promise";
 import * as ApiType from "#mari-plugin/types";
-
-async function getUID( userID: number, redis: BOT["redis"] ): Promise<number | string> {
-	const uid: string = await redis.getString( `silvery-star.user-bind-uid-${ userID }` );
-	return uid.length ? parseInt( uid ) : "您还未绑定游戏UID";
-}
+import { getUID } from "../../utils/message";
 
 export async function main( { sendMessage, messageData, redis, logger }: InputParameter ): Promise<void> {
+	const msg: string = messageData.raw_message;
 	const userID: number = messageData.user_id;
 	
 	/* 检查是否绑定了uid */
-	const info = await getUID( userID, redis );
+	const { info } = await getUID( msg, userID, redis );
+	
 	if ( typeof info === "string" ) {
 		await sendMessage( info );
 		return;
