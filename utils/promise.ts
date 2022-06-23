@@ -12,6 +12,8 @@ export enum ErrorMsg {
 	SELF_PRIVATE_ACCOUNT = "请在游戏中打开「显示角色详情」后再次尝试。",
 	NOT_FOUND = "对方未将「$」展示在角色展柜中。",
 	SELF_NOT_FOUND = "请确认「$」已被展示在游戏的角色展柜中。",
+	PANEL_EMPTY = "对方未再展示柜中添加任何角色",
+	SELF_PANEL_EMPTY = "请在角色展柜中设置需要展示的角色",
 	FORM_MESSAGE = "EnKa接口报错: "
 }
 
@@ -57,6 +59,12 @@ export async function charaDetailPromise( uid: number, self: boolean, sendMessag
 			throw ErrorMsg.FORM_MESSAGE + error;
 		}
 		
+		/* 未展示任何角色 */
+		if ( !data.playerInfo.showAvatarInfoList ) {
+			throw self ? ErrorMsg.SELF_PANEL_EMPTY : ErrorMsg.PANEL_EMPTY;
+		}
+		
+		/* 未开启查看详情 */
 		if ( !data.avatarInfoList ) {
 			throw self ? ErrorMsg.SELF_PRIVATE_ACCOUNT : ErrorMsg.PRIVATE_ACCOUNT;
 		}

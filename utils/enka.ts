@@ -140,6 +140,9 @@ export class EnKa {
 	
 	/* 获取用户数据 */
 	public getDetailInfo( data: ApiType.EnKa ): ApiType.Detail {
+		if ( !data.avatarInfoList ) {
+			throw new Error( "当前用户展示角色为空" );
+		}
 		const avatars: ApiType.Avatar[] = data.avatarInfoList.map( chara => {
 			const avatarId = chara["avatarId"];
 			const level: string | undefined = chara.propMap['4001'].val;

@@ -4,7 +4,7 @@ export type EnKaEquip = EnKaReliquaryEquip | EnKaWeaponEquip
 
 export interface EnKa {
 	playerInfo: EnKaPlayInfo
-	avatarInfoList: EnKaAvatar[]
+	avatarInfoList?: EnKaAvatar[]
 }
 
 /**
@@ -29,7 +29,7 @@ export interface EnKaPlayInfo {
 	finishAchievementNum: number,
 	towerFloorIndex: number,
 	towerLevelIndex: number,
-	showAvatarInfoList: Array<{
+	showAvatarInfoList?: Array<{
 		avatarId: number;
 		level: number;
 	}>,
