@@ -1,5 +1,5 @@
 import { scheduleJob } from "node-schedule";
-import { getCharacterID } from "#genshin/utils/api";
+import { getCharacterId } from "#mari-plugin/utils/api";
 
 export class CharacterId {
 	public map: Record<string, number> = {};
@@ -7,11 +7,13 @@ export class CharacterId {
 	
 	constructor() {
 		this.initData().then();
-		scheduleJob( "0 0 0 * * *", this.initData );
+		scheduleJob( "0 0 0 * * *", async () => {
+			await this.initData();
+		} );
 	}
-
+	
 	private async initData() {
-		this.map = await getCharacterID();
+		this.map = await getCharacterId();
 		for ( const name in this.map ) {
 			this.idMap[this.map[name]] = name;
 		}

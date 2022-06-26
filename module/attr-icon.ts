@@ -6,11 +6,9 @@ export class AttrIcon {
 	public map: AttrIconMap = {};
 	
 	constructor() {
-		this.initData().then();
-		scheduleJob( "0 0 0 * * *", this.initData );
-	}
-	
-	private async initData() {
-		this.map = await getAttrIcon();
+		getAttrIcon().then( res => this.map = res );
+		scheduleJob( "0 0 0 * * *", async () => {
+			this.map = await getAttrIcon();
+		} );
 	}
 }

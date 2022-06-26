@@ -3,6 +3,7 @@ import { parse } from "yaml";
 import { AttrIconMap, EnKa, EnKaArtifact, EnKaChara, EnKaMeta } from "#mari-plugin/types";
 
 const __API = {
+	FETCH_CHARACTER_ID: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/character_id.yml",
 	FETCH_ARTIFACT_ID: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/artifact_id.yml",
 	// https://enka.shinshin.moe/
 	FETCH_CHARA_DETAIL: "https://enka.shinshin.moe/u/$/__data.json",
@@ -11,6 +12,11 @@ const __API = {
 	FETCH_ENKA_META: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/meta.yml",
 	FETCH_ATTR_ICON: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/attr_icon.yml"
 };
+
+export async function getCharacterId(): Promise<Record<string, number>> {
+	const result: Response = await fetch( __API.FETCH_CHARACTER_ID );
+	return parse( await result.text() );
+}
 
 export async function getArtifactId(): Promise<Record<string, string>> {
 	const result: Response = await fetch( __API.FETCH_ARTIFACT_ID );

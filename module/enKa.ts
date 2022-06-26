@@ -9,7 +9,9 @@ export class EnKaClass {
 	
 	constructor() {
 		this.initData().then();
-		scheduleJob( "0 0 0 * * *", this.initData );
+		scheduleJob( "0 0 0 * * *", async () => {
+			await this.initData();
+		} );
 	}
 	
 	private async initData() {
