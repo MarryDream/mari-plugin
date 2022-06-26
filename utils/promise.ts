@@ -50,7 +50,8 @@ export async function charaDetailPromise( uid: number, self: boolean, sendMessag
 	}
 	
 	if ( !detail || isUpdate ) {
-		const startMsg = isUpdate ? "开始更新面板数据，请稍后……" : "正在获取数据，请稍后……";
+		const msgUser = self ? "" : `「${ uid }」`;
+		const startMsg = isUpdate ? `开始更新${ msgUser }面板数据，请稍后……` : "正在获取数据，请稍后……";
 		await sendMessage( startMsg );
 		
 		let data: ApiType.EnKa;
