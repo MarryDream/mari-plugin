@@ -1,12 +1,15 @@
 export default class MariPluginConfig {
 	public serverPort: number;
+	public uidQuery: boolean;
 	
 	public static init = {
-		serverPort: 60721
+		serverPort: 60721,
+		uidQuery: false
 	};
 	
 	constructor( config: any ) {
 		this.serverPort = config.serverPort;
+		this.uidQuery = config.uidQuery;
 	}
 	
 	public async refresh(): Promise<string> {

@@ -2,14 +2,23 @@ import { InputParameter } from "@modules/command";
 import { charaDetailPromise } from "#mari-plugin/utils/promise";
 import * as ApiType from "#mari-plugin/types";
 import { getUID, isAt } from "../../utils/message";
+import { config } from "../../init";
 
 export async function main( { sendMessage, messageData, redis, logger }: InputParameter ): Promise<void> {
 	const msg: string = messageData.raw_message;
 	const userID: number = messageData.user_id;
 	
+	const isClear = msg === "-c";
 	const atID: string | undefined = isAt( msg );
+	const isUid = !isClear && !atID;
+	
+	if ( !config.uidQuery && isUid ) {
+		sendMessage( "bot 持有者已关闭 uid 更新功能" );
+		return;
+	}
+	
 	/* 检查是否绑定了uid */
-	const { info } = await getUID( msg === "-c" ? "" : msg, userID, redis, atID );
+	const { info } = await getUID( isClear ? "" : msg, userID, redis, atID );
 	
 	if ( typeof info === "string" ) {
 		await sendMessage( info );
@@ -17,8 +26,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	}
 	
 	const uid: number = info;
-	
-	if ( msg === "-c" ) {
+	if ( isClear ) {
 		await redis.deleteKey( `mari-plugin.chara-detail-list-${ uid }` );
 		await sendMessage( `「${ uid }」的面板存储数据已清空` );
 		return;

@@ -1,6 +1,6 @@
 import { InputParameter } from "@modules/command";
 import { getRealName, NameResult } from "#genshin/utils/name";
-import { characterId, renderer } from "#mari-plugin/init";
+import { characterId, config, renderer } from "#mari-plugin/init";
 import { charaDetailPromise, ErrorMsg } from "#mari-plugin/utils/promise";
 import { RenderResult } from "@modules/renderer";
 import * as ApiType from "#mari-plugin/types";
@@ -19,6 +19,11 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	
 	const reg = execRes;
 	const [ , uidStr, atMsg, name ] = reg;
+	
+	if ( !config.uidQuery && uidStr ) {
+		sendMessage( "bot 持有者已关闭 uid 查询功能" );
+		return;
+	}
 	
 	const atID: string | undefined = isAt( atMsg );
 	const userID: number = messageData.user_id;
