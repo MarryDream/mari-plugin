@@ -10,7 +10,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	
 	const isClear = msg === "-c";
 	const atID: string | undefined = isAt( msg );
-	const isUid = !isClear && !atID;
+	const isUid = msg && !isClear && !atID;
 	
 	if ( !config.uidQuery && isUid ) {
 		sendMessage( "bot 持有者已关闭 uid 更新功能" );

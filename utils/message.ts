@@ -1,4 +1,7 @@
+import bot from "ROOT";
 import Database from "@modules/database";
+import { AuthLevel } from "../../../modules/management/auth";
+import { Order } from "../../../modules/command";
 
 interface UIDResult {
 	info: number | string;
@@ -13,8 +16,10 @@ export function isAt( message: string ): string | undefined {
 
 export async function getUID( data: string, userID: number, redis: Database, atID?: string ): Promise<UIDResult> {
 	if ( !data ) {
+		const a: AuthLevel = await bot.auth.get( userID );
+		const COMMAND_BIND = <Order>bot.command.getSingle( "silvery-star.bind", a );
 		const uid: string = await redis.getString( `silvery-star.user-bind-uid-${ userID }` );
-		const info = uid.length === 0 ? "您还未绑定游戏UID" : parseInt( uid );
+		const info = uid.length === 0 ? `您还未绑定游戏UID，请使用 ${ COMMAND_BIND.getHeaders()[0] }+游戏UID 绑定` : parseInt( uid );
 		return { info, stranger: false, self: true };
 	} else if ( atID ) {
 		const uid: string = await redis.getString( `silvery-star.user-bind-uid-${ atID }` );

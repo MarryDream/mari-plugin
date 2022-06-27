@@ -41,9 +41,22 @@ git pull
 
 初始默认指令为 `#panel (UID|@) 角色名`，括号内为选填。
 
-使用 `#panel_update` 更新面板数据，获取到的数据将会被保存，即使更换看板人物后依然可以查询。
+使用 `#panel_update` 更新面板数据，获取到的数据将会被保存，即使更换看板人物后依然可以查询。  
+`#panel_update` 指令同样支持 `@` 与 `uid` 更新，且允许使用 `#panel_update -c` 清空自己当前保存的面板数据。
 
-使用`#panel_update -c` 清空当前保存的面板数据。
+### 配置项
+
+初次运行会在 `Adachi-BOT/config` 目录下创建 `mari_plugin.yml` 配置文件，初始值如下
+
+```yaml
+serverPort: 60721,
+uidQuery: false
+```
+
+- serverPort: 插件所运行的端口，一般不用管，除非出现端口冲突
+- uidQuery: 是否允许 `#panel` 与 `#panel_update` 使用 `uid` 查询/更新，为防止部分用户恶意遍历查询 uid，这里默认关闭，有需要的可以开启
+
+修改 `mari_plugin.yml` 后重启 bot 或执行 Adachi-BOT 的 `refresh` 重载配置文件指令生效
 
 ![panel][2]
 
