@@ -29,7 +29,17 @@ const panelUpdate: OrderConfig = {
 			"使用 -c 清空存储的面板数据"
 };
 
+const events: OrderConfig = {
+	type: "order",
+	cmdKey: "seto-mari.events-calendar",
+	desc: [ "活动日历", "" ],
+	headers: [ "event" ],
+	regexps: [ "" ],
+	main: "achieves/event",
+	detail: "原神活动持续时间日历"
+};
+
 export default <PluginSetting>{
 	pluginName: "mari-plugin",
-	cfgList: [ panelDetail, panelUpdate ]
+	cfgList: [ panelDetail, panelUpdate, events ]
 };
