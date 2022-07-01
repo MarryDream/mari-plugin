@@ -1,6 +1,15 @@
 import { OrderConfig } from "@modules/command";
 import { PluginSetting } from "@modules/plugin";
 
+const mariHelp: OrderConfig = {
+	type: "order",
+	cmdKey: "seto-mari.help",
+	desc: [ "指令帮助", "(-k)" ],
+	headers: [ "mari_help" ],
+	regexps: [ "(-k)?" ],
+	main: "achieves/help"
+};
+
 const panelDetail: OrderConfig = {
 	type: "order",
 	cmdKey: "seto-mari.panel",
@@ -31,5 +40,5 @@ const panelUpdate: OrderConfig = {
 
 export default <PluginSetting>{
 	pluginName: "mari-plugin",
-	cfgList: [ panelDetail, panelUpdate ]
+	cfgList: [ mariHelp, panelDetail, panelUpdate ]
 };

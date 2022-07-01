@@ -7,6 +7,7 @@ export function createServer( config: MariPluginConfig, logger: Logger ): void {
 	const app = express();
 	app.use( express.static( __dirname ) );
 	
+	app.use( "/api/help", r.HelpRoute );
 	app.use( "/api/chara", r.CharaRouter );
 	
 	app.listen( config.serverPort, () => {
