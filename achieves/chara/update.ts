@@ -2,7 +2,7 @@ import { InputParameter } from "@modules/command";
 import { charaDetailPromise } from "#mari-plugin/utils/promise";
 import * as ApiType from "#mari-plugin/types";
 import { getUID, isAt } from "../../utils/message";
-import { config } from "../../init";
+import { config } from "#mari-plugin/init";
 
 export async function main( { sendMessage, messageData, redis, logger }: InputParameter ): Promise<void> {
 	const msg: string = messageData.raw_message;

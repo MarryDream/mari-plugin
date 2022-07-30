@@ -2,6 +2,7 @@ import bot from "ROOT";
 import { getCharaDetail } from "#mari-plugin/utils/api";
 import { enKaClass } from "#mari-plugin/init";
 import { EnKa } from "#mari-plugin/utils/enka";
+import { config } from "#mari-plugin/init";
 import { SendFunc } from "@modules/message";
 import * as ApiType from "#mari-plugin/types"
 
@@ -56,7 +57,7 @@ export async function charaDetailPromise( uid: number, self: boolean, sendMessag
 		
 		let data: ApiType.EnKa;
 		try {
-			data = await getCharaDetail( uid );
+			data = await getCharaDetail( config.enKaApi, uid );
 		} catch ( error ) {
 			throw ErrorMsg.FORM_MESSAGE + error;
 		}

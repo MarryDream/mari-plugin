@@ -1,4 +1,4 @@
-import { InputParameter } from "@modules/command";
+import { InputParameter, Order } from "@modules/command";
 import { getRealName, NameResult } from "#genshin/utils/name";
 import { characterId, config, renderer } from "#mari-plugin/init";
 import { charaDetailPromise, ErrorMsg } from "#mari-plugin/utils/promise";
@@ -6,8 +6,9 @@ import { RenderResult } from "@modules/renderer";
 import * as ApiType from "#mari-plugin/types";
 import { typeData } from "#genshin/init";
 import { getUID, isAt } from "#mari-plugin/utils/message";
+import bot from "ROOT";
 
-export async function main( { sendMessage, messageData, redis, logger }: InputParameter ): Promise<void> {
+export async function main( { sendMessage, messageData, redis, logger, auth }: InputParameter ): Promise<void> {
 	const msg: string = messageData.raw_message;
 	
 	const parser = /(\d{9})?\s*(\[CQ:at,qq=\d+.*])?\s*([\u4e00-\u9fa5]+)/i;
@@ -21,7 +22,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	const [ , uidStr, atMsg, name ] = reg;
 	
 	if ( !config.uidQuery && uidStr ) {
-		sendMessage( "bot 持有者已关闭 uid 查询功能" );
+		await sendMessage( "bot 持有者已关闭 uid 查询功能" );
 		return;
 	}
 	
@@ -99,6 +100,8 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 		await sendMessage( res.data );
 	} else {
 		logger.error( res.error );
-		await sendMessage( "图片渲染异常，请联系持有者进行反馈" );
+		const CALL = <Order>bot.command.getSingle( "adachi.call", await auth.get( userID ) );
+		const appendMsg = CALL ? `私聊使用 ${ CALL.getHeaders()[0] } ` : "";
+		await sendMessage( `图片渲染异常，请${ appendMsg }联系持有者进行反馈` );
 	}
 }

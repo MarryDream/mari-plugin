@@ -1,3 +1,9 @@
+/**
+ * 感谢 Enka 团队提供的面板查询服务
+ * Enka 官方地址：https://enka.shinshin.moe/
+ * 如果可以的话，考虑在 Patreon(https://patreon.com/algoinde) 上支持他们
+ * 或提供闲置的原神账户，可通过 Discord(https://discord.gg/G3m7CWkssY) 联系他们
+ */
 import * as ApiType from "#mari-plugin/types";
 import { artifactId, attrIcon, characterId } from "#mari-plugin/init";
 

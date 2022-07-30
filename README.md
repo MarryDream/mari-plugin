@@ -50,19 +50,22 @@ git pull
 
 ```yaml
 serverPort: 60721,
-uidQuery: false
+uidQuery: false,
+enKaApi: https://enka.minigg.cn/
 ```
 
 - serverPort: 插件所运行的端口，一般不用管，除非出现端口冲突
 - uidQuery: 是否允许 `#panel` 与 `#panel_update` 使用 `uid` 查询/更新，为防止部分用户恶意遍历查询 uid，这里默认关闭，有需要的可以开启
+- enKaApi: 面板数据来源地址，默认为 Enka 官方地址，可修改为 [@MiniGrayGay][2] 提供的国内反代地址以解决连接异常问题，详见配置文件中的 `tips`
 
 修改 `mari_plugin.yml` 后重启 bot 或执行 Adachi-BOT 的 `refresh` 重载配置文件指令生效
 
-![panel][2]
+![panel][3]
 
 # 致谢
 
-- [Enka.Network][3] - panel数据来源
+- [Enka.Network][4] - 提供panel数据来源
+- [@MiniGrayGay][2] - 提供Enka反代地址
 
 # 其他
 
@@ -70,6 +73,8 @@ logo来源：https://www.pixiv.net/artworks/63976809
 
 [1]: https://github.com/SilveryStar/Adachi-BOT
 
-[2]: https://mari-plugin.oss-cn-beijing.aliyuncs.com/example/panel.png
+[2]: https://github.com/MiniGrayGay
 
-[3]: https://enka.shinshin.moe/
+[3]: https://mari-plugin.oss-cn-beijing.aliyuncs.com/example/panel.png
+
+[4]: https://enka.shinshin.moe/

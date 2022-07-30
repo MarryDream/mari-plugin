@@ -4,7 +4,7 @@ import { PluginSetting } from "@modules/plugin";
 const panelDetail: OrderConfig = {
 	type: "order",
 	cmdKey: "seto-mari.panel",
-	desc: [ "角色详情", "(UID|@)[角色]" ],
+	desc: [ "详情", "(UID|@)[角色]" ],
 	headers: [ "panel" ],
 	regexps: [
 		[ "(\\d{9})?", "[\\u4e00-\\u9fa5]+" ],

@@ -1,12 +1,12 @@
 import fetch from "node-fetch";
 import { parse } from "yaml";
 import { AttrIconMap, EnKa, EnKaArtifact, EnKaChara, EnKaMeta } from "#mari-plugin/types";
+import { getVersion } from "#mari-plugin/utils/bot-info";
 
 const __API = {
 	FETCH_CHARACTER_ID: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/character_id.yml",
 	FETCH_ARTIFACT_ID: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/artifact_id.yml",
-	// https://enka.shinshin.moe/
-	FETCH_CHARA_DETAIL: "https://enka.shinshin.moe/u/$/__data.json",
+	FETCH_CHARA_DETAIL: "u/$/__data.json",
 	FETCH_ENKA_ARTIFACT: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/artifact.yml",
 	FETCH_ENKA_CHARA: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/chara.yml",
 	FETCH_ENKA_META: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/meta.yml",
@@ -23,9 +23,14 @@ export async function getArtifactId(): Promise<Record<string, string>> {
 	return parse( await result.text() );
 }
 
-export async function getCharaDetail( uid: number ): Promise<EnKa> {
-	const charaDetailApi = __API.FETCH_CHARA_DETAIL.replace( "$", uid.toString() );
-	const result: Response = await fetch( charaDetailApi );
+export async function getCharaDetail( origin: string, uid: number ): Promise<EnKa> {
+	const charaDetailApi = origin + __API.FETCH_CHARA_DETAIL.replace( "$", uid.toString() );
+	console.log(charaDetailApi)
+	const result: Response = await fetch( charaDetailApi, {
+		headers: {
+			"User-Agent": `Adachi-BOT/${ getVersion() }`
+		}
+	} );
 	return await result.json();
 }
 
