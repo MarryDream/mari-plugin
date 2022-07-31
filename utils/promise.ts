@@ -7,7 +7,6 @@ import { SendFunc } from "@modules/message";
 import * as ApiType from "#mari-plugin/types"
 
 export enum ErrorMsg {
-	ERROR_SERVER = "暂不支持b服用户查询",
 	IS_PENDING = "两次请求间隔较短，请于 $ 后再次尝试",
 	PRIVATE_ACCOUNT = "对方未开启「显示角色详情」，无法查询",
 	SELF_PRIVATE_ACCOUNT = "请在游戏中打开「显示角色详情」后再次尝试。",
@@ -27,10 +26,6 @@ function getLimitTime( differ: number ): string {
 }
 
 export async function charaDetailPromise( uid: number, self: boolean, sendMessage: SendFunc, isUpdate: boolean ): Promise<ApiType.Detail> {
-	if ( uid.toString()[0] === "5" ) {
-		throw ErrorMsg.ERROR_SERVER;
-	}
-	
 	const dbKey: string = `mari-plugin.chara-detail-list-${ uid }`;
 	const dbKeyTimeout: string = `ari-plugin.chara-detail-time-${ uid }`;
 	

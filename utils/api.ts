@@ -25,10 +25,10 @@ export async function getArtifactId(): Promise<Record<string, string>> {
 
 export async function getCharaDetail( origin: string, uid: number ): Promise<EnKa> {
 	const charaDetailApi = origin + __API.FETCH_CHARA_DETAIL.replace( "$", uid.toString() );
-	console.log(charaDetailApi)
+	
 	const result: Response = await fetch( charaDetailApi, {
 		headers: {
-			"User-Agent": `Adachi-BOT/${ getVersion() }`
+			"User-Agent": `mari-plugin/1.0`
 		}
 	} );
 	return await result.json();
