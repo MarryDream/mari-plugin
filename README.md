@@ -25,6 +25,12 @@ git clone https://github.com/MarryDream/mari-plugin.git
 
 ## 更新方法
 
+### 指令更新
+
+使用 (header)`mari_update` 指令更新，需要项目不能以 `win-start` 方式启动。
+
+### 手动更新
+
 进入 `Adachi-BOT/src/plugins/mari-plugin` 目录下，执行以下命令即可
 
 ```bash

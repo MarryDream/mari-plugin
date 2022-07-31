@@ -15,7 +15,7 @@ export const enKaClass = new m.EnKaClass();
 export const characterId = new m.CharacterId();
 export const attrIcon = new m.AttrIcon();
 
-export const configFileName = "mari_plugin"
+export const configFileName = "mari_plugin";
 
 function loadConfig( file: FileManagement ): MariPluginConfig {
 	const initCfg = MariPluginConfig.init;
