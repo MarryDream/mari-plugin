@@ -4,7 +4,7 @@ import pluginSetting from "./setting";
 import { PluginSetting } from "@modules/plugin";
 import { createServer } from "./server";
 import { BOT } from "@modules/bot";
-import MariPluginConfig from "./module/config";
+import MariPluginConfig, { IMariPluginConfig } from "./module/config";
 import FileManagement from "@modules/file";
 import { Renderer } from "@modules/renderer";
 
@@ -27,7 +27,7 @@ function loadConfig( file: FileManagement ): MariPluginConfig {
 		return new MariPluginConfig( initCfg );
 	}
 	
-	const config: any = file.loadYAML( configFileName );
+	const config: IMariPluginConfig = file.loadYAML( configFileName );
 	const keysNum = o => Object.keys( o ).length;
 	
 	/* 检查 defaultConfig 是否更新 */
