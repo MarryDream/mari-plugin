@@ -46,5 +46,10 @@ const upgrade: OrderConfig = {
 
 export default <PluginSetting>{
 	pluginName: "mari-plugin",
-	cfgList: [ panelDetail, panelUpdate, upgrade ]
+	cfgList: [ panelDetail, panelUpdate, upgrade ],
+	repo: {
+		owner: "MarryDream",
+		repoName: "mari-plugin",
+		ref: "master"
+	}
 };
