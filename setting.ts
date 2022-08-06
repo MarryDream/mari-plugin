@@ -5,11 +5,11 @@ import { AuthLevel } from "@modules/management/auth";
 const panelDetail: OrderConfig = {
 	type: "order",
 	cmdKey: "seto-mari.panel",
-	desc: [ "详情", "(UID|@)[角色]" ],
+	desc: [ "详情", "[角色](UID|@)" ],
 	headers: [ "panel" ],
 	regexps: [
-		[ "(\\d{9})?", "[\\u4e00-\\u9fa5]+" ],
-		[ "\\[CQ:at,qq=\\d+.*]?", "[\\u4e00-\\u9fa5]+" ]
+		[ "[\\u4e00-\\u9fa5]+", "(\\d{9})?" ],
+		[ "[\\u4e00-\\u9fa5]+", "\\[CQ:at,qq=\\d+.*]?" ]
 	],
 	main: "achieves/chara/detail",
 	detail: "展示看板角色详情，游戏中将角色放入看板并打开\"显示详细信息\"才可查询"

@@ -11,7 +11,7 @@ import bot from "ROOT";
 export async function main( { sendMessage, messageData, redis, logger, auth }: InputParameter ): Promise<void> {
 	const msg: string = messageData.raw_message;
 	
-	const parser = /(\d{9})?\s*(\[CQ:at,qq=\d+.*])?\s*([\u4e00-\u9fa5]+)/i;
+	const parser = /([\u4e00-\u9fa5]+)\s*(\d{9})?\s*(\[CQ:at,qq=\d+.*])?/i;
 	const execRes = parser.exec( msg );
 	if ( !execRes ) {
 		await sendMessage( "指令格式有误" );
@@ -19,7 +19,7 @@ export async function main( { sendMessage, messageData, redis, logger, auth }: I
 	}
 	
 	const reg = execRes;
-	const [ , uidStr, atMsg, name ] = reg;
+	const [ , name, uidStr, atMsg ] = reg;
 	
 	if ( !config.uidQuery && uidStr ) {
 		await sendMessage( "bot 持有者已关闭 uid 查询功能" );

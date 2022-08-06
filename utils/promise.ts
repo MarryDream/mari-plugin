@@ -32,7 +32,7 @@ export async function charaDetailPromise( uid: number, self: boolean, sendMessag
 	const detailStr: string = await bot.redis.getString( dbKey );
 	const updateTime: string = await bot.redis.getString( dbKeyTimeout );
 	
-	const limitWait: number = 5 * 60 * 1000;
+	const limitWait: number = 3 * 60 * 1000;
 	
 	let detail: ApiType.Detail | null = detailStr ? JSON.parse( detailStr ) : null;
 	

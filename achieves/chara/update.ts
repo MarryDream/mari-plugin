@@ -13,7 +13,7 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	const isUid = msg && !isClear && !atID;
 	
 	if ( !config.uidQuery && isUid ) {
-		sendMessage( "bot 持有者已关闭 uid 更新功能" );
+		await sendMessage( "bot 持有者已关闭 uid 更新功能" );
 		return;
 	}
 	

@@ -45,7 +45,7 @@ git pull
 
 数据来源于 https://enka.shinshin.moe/ ，支持 uid 与 @ 查询。
 
-初始默认指令为 `#panel (UID|@) 角色名`，括号内为选填。
+初始默认指令为 `#panel 角色名 (UID|@)`，括号内为选填。
 
 使用 `#panel_update` 更新面板数据，获取到的数据将会被保存，即使更换看板人物后依然可以查询。  
 `#panel_update` 指令同样支持 `@` 与 `uid` 更新，且允许使用 `#panel_update -c` 清空自己当前保存的面板数据。
