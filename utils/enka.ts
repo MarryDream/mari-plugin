@@ -56,6 +56,7 @@ const attrMap = {
 	ELEC_ADD_HURT: "雷元素伤害加成",
 	WIND_ADD_HURT: "风元素伤害加成",
 	WATER_ADD_HURT: "水元素伤害加成",
+	GRASS_ADD_HURT: "草元素伤害加成",
 	PHYSICAL_ADD_HURT: "物理伤害加成"
 };
 
