@@ -1,6 +1,7 @@
 import { OrderConfig } from "@modules/command";
 import { PluginSetting } from "@modules/plugin";
 import { AuthLevel } from "@modules/management/auth";
+import MariPluginConfig from "#mari-plugin/module/config";
 
 const panelDetail: OrderConfig = {
 	type: "order",
@@ -44,12 +45,15 @@ const upgrade: OrderConfig = {
 		"在指令后追加 -f 来覆盖本地修改强制更新"
 }
 
-export default <PluginSetting>{
-	pluginName: "mari-plugin",
-	cfgList: [ panelDetail, panelUpdate, upgrade ],
-	repo: {
-		owner: "MarryDream",
-		repoName: "mari-plugin",
-		ref: "master"
+export default ( config: MariPluginConfig ): PluginSetting => {
+	return {
+		pluginName: "mari-plugin",
+		cfgList: [ panelDetail, panelUpdate, upgrade ],
+		aliases: config.aliases,
+		repo: {
+			owner: "MarryDream",
+			repoName: "mari-plugin",
+			ref: "master"
+		}
 	}
-};
+}

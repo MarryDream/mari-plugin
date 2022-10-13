@@ -56,5 +56,5 @@ export async function init( { file, logger }: BOT ): Promise<PluginSetting> {
 	
 	bot.refresh.registerRefreshableFile( configFileName, config );
 	
-	return pluginSetting;
+	return pluginSetting( config );
 }

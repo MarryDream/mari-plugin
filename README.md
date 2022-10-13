@@ -58,11 +58,14 @@ git pull
 serverPort: 60721,
 uidQuery: false,
 enKaApi: https://enka.minigg.cn/
+aliases:
+    - 茉莉
 ```
 
 - serverPort: 插件所运行的端口，一般不用管，除非出现端口冲突
 - uidQuery: 是否允许 `#panel` 与 `#panel_update` 使用 `uid` 查询/更新，为防止部分用户恶意遍历查询 uid，这里默认关闭，有需要的可以开启
 - enKaApi: 面板数据来源地址，默认为 Enka 官方地址，可修改为 [@MiniGrayGay][2] 提供的国内反代地址以解决连接异常问题，详见配置文件中的 `tips`
+- aliases：适配主项目 `upgrade_plugins` 更新插件指令的别名更新，可使用在此配置的别名替换插件名称进行更新。
 
 修改 `mari_plugin.yml` 后重启 bot 或执行 Adachi-BOT 的 `refresh` 重载配置文件指令生效
 
