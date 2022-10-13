@@ -11,7 +11,7 @@ const template = `<div class="chara-detail" :class="{ none: data.element === 'no
 			</div>
 		</div>
 		<div class="base-info card">
-			<div v-for="(a, aKey) of data.overview" :key="aKey" class="list-item">
+			<div v-for="(a, aKey) of overview" :key="aKey" class="list-item">
 				<p class="base-info-label">
 					<svg class="iconpark-icon" :style="{ color: a.color }">
 						<use :href="a.icon"></use>
@@ -163,6 +163,34 @@ export default defineComponent( {
 			return `https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/character/${ data.id }/gacha_splash.png`;
 		} );
 		
+		const overview = computed( () => {
+			const name = "元素伤害加成";
+			const bonusAttr = {};
+			data.overview
+				.filter( el => el.attr.includes( name ) )
+				.forEach( el => {
+					if ( !Reflect.get( bonusAttr, el.baseValue ) ) {
+						Reflect.set( bonusAttr, el.baseValue, [ el.attr ] )
+					} else {
+						Reflect.get( bonusAttr, el.baseValue ).push( el.attr )
+					}
+				} );
+			/* 查找 baseValue 相同数量大于2的伤害加成属性 */
+			const filterBonus = Object.values( bonusAttr ).find( el => el.length > 2 ) || [];
+			const list = data.overview.sort( ( prev, next ) => {
+				if ( prev.attr.includes( name ) && next.attr.includes( name ) ) {
+					const getValue = el => Number.parseInt( el.baseValue.replace( "%", "" ) )
+					return getValue( next ) - getValue( prev );
+				}
+			} ).filter( el => {
+				/* 剔除重复的伤害加成属性 */
+				return !filterBonus.includes( el.attr );
+			} )
+			/* 最多展示9个 */
+			list.splice( 9 );
+			return list;
+		} )
+		
 		function getTalentIcon( talentKey ) {
 			return `https://mari-plugin.oss-cn-beijing.aliyuncs.com/image/character/${ data.id }/cons_${ talentKey }.png`
 		}
@@ -176,6 +204,7 @@ export default defineComponent( {
 			artifacts,
 			urlParams,
 			userAvatar,
+			overview,
 			portrait,
 			skills,
 			weaponIcon,
