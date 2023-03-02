@@ -45,10 +45,20 @@ const upgrade: OrderConfig = {
 		"在指令后追加 -f 来覆盖本地修改强制更新"
 }
 
+const chat: OrderConfig = {
+	type: "order",
+	cmdKey: "marry-dream.chat",
+	desc: [ "chatGPT", "" ],
+	headers: [ "chat" ],
+	regexps: [ ".+" ],
+	main: "achieves/chat",
+	detail: "chatGPT 聊天"
+};
+
 export default ( config: MariPluginConfig ): PluginSetting => {
 	return {
 		pluginName: "mari-plugin",
-		cfgList: [ panelDetail, panelUpdate, upgrade ],
+		cfgList: [ panelDetail, panelUpdate, upgrade, chat ],
 		aliases: config.aliases,
 		repo: {
 			owner: "MarryDream",

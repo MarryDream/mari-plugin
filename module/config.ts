@@ -7,6 +7,7 @@ export interface IMariPluginConfig {
 	serverPort: number;
 	uidQuery: boolean;
 	enKaApi: string;
+	openAiKey: string;
 	aliases: string[];
 }
 
@@ -14,6 +15,7 @@ export default class MariPluginConfig {
 	public serverPort: number;
 	public uidQuery: boolean;
 	public enKaApi: string;
+	public openAiKey: string;
 	public aliases: string[];
 	
 	public static init: IMariPluginConfig = {
@@ -25,6 +27,7 @@ export default class MariPluginConfig {
 		serverPort: 60721,
 		uidQuery: false,
 		enKaApi: "https://enka.shinshin.moe/",
+		openAiKey: "",
 		aliases: [ "茉莉" ]
 	};
 	
@@ -33,12 +36,14 @@ export default class MariPluginConfig {
 		this.uidQuery = config.uidQuery;
 		this.enKaApi = config.enKaApi;
 		this.aliases = config.aliases;
+		this.openAiKey = config.openAiKey;
 	}
 	
 	public async refresh( config: IMariPluginConfig ): Promise<string> {
 		try {
 			this.uidQuery = config.uidQuery;
 			this.enKaApi = config.enKaApi;
+			this.openAiKey = config.openAiKey;
 			
 			for ( const alias of this.aliases ) {
 				Reflect.deleteProperty( PluginAlias, alias );
