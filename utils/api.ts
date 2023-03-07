@@ -7,7 +7,7 @@ const __API = {
 	FETCH_CHARACTER_ID: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/character_id.yml",
 	FETCH_ARTIFACT_ID: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/docs/artifact_id.yml",
 	/* enka */
-	FETCH_CHARA_DETAIL: "u/$/__data.json",
+	FETCH_CHARA_DETAIL: "api/uid/$",
 	FETCH_ENKA_ARTIFACT: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/artifact.yml",
 	FETCH_ENKA_CHARA: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/chara.yml",
 	FETCH_ENKA_META: "https://mari-plugin.oss-cn-beijing.aliyuncs.com/enka/meta.yml",
