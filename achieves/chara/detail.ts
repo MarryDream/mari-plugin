@@ -11,7 +11,7 @@ import bot from "ROOT";
 export async function main( { sendMessage, messageData, redis, logger, auth }: InputParameter ): Promise<void> {
 	const msg: string = messageData.raw_message;
 	
-	const parser = /([\u4e00-\u9fa5]+)\s*(\d{9})?\s*(\[CQ:at,qq=\d+.*])?/i;
+	const parser = /([\u4e00-\u9fa5]+)\s*(\d{9})?\s*(\[CQ:at,type=at,qq=\d+.*])?/i;
 	const execRes = parser.exec( msg );
 	if ( !execRes ) {
 		await sendMessage( "指令格式有误" );
@@ -94,7 +94,7 @@ export async function main( { sendMessage, messageData, redis, logger, auth }: I
 		...currentChara
 	} ) );
 	
-	const res: RenderResult = await renderer.asCqCode(
+	const res: RenderResult = await renderer.asSegment(
 		"/chara-detail.html", { qq: target, stranger } );
 	if ( res.code === "ok" ) {
 		await sendMessage( res.data );

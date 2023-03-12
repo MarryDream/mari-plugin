@@ -10,7 +10,7 @@ const panelDetail: OrderConfig = {
 	headers: [ "panel" ],
 	regexps: [
 		[ "[\\u4e00-\\u9fa5]+", "(\\d{9})?" ],
-		[ "[\\u4e00-\\u9fa5]+", "\\[CQ:at,qq=\\d+.*]?" ]
+		[ "[\\u4e00-\\u9fa5]+", "\\[CQ:at,type=at,qq=\\d+.*]?" ]
 	],
 	main: "achieves/chara/detail",
 	detail: "展示看板角色详情，游戏中将角色放入看板并打开\"显示详细信息\"才可查询"
@@ -23,7 +23,7 @@ const panelUpdate: OrderConfig = {
 	headers: [ "panel_update" ],
 	regexps: [
 		[ "(\\d{9})?" ],
-		[ "\\[CQ:at,qq=\\d+.*]?" ],
+		[ "\\[CQ:at,type=at,qq=\\d+.*]?" ],
 		[ "-c" ]
 	],
 	main: "achieves/chara/update",
