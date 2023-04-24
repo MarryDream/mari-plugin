@@ -39,11 +39,11 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	
 	try {
 		detail = await charaDetailPromise( uid, self, sendMessage, true );
-	} catch ( error ) {
+	} catch ( error: any ) {
 		if ( typeof error === "string" ) {
 			await sendMessage( <string>error );
 		} else {
-			logger.error( error );
+			logger.error( error.stack || error.message || error );
 		}
 		return;
 	}

@@ -7,7 +7,6 @@ import { BOT } from "@modules/bot";
 import MariPluginConfig, { IMariPluginConfig } from "./module/config";
 import FileManagement from "@modules/file";
 import { Renderer } from "@modules/renderer";
-
 export let config: MariPluginConfig
 export let renderer: Renderer;
 export const artifactId = new m.ArtifactId();
