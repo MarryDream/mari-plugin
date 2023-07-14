@@ -1,6 +1,6 @@
 import { scheduleJob } from "node-schedule";
-import { getAttrIcon } from "#mari-plugin/utils/api";
-import { AttrIconMap } from "#mari-plugin/types";
+import { getAttrIcon } from "#/mari-plugin/utils/api";
+import { AttrIconMap } from "#/mari-plugin/types";
 
 export class AttrIcon {
 	public map: AttrIconMap = {};

@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { parse } from "yaml";
-import { AttrIconMap, EnKa, EnKaArtifact, EnKaChara, EnKaMeta } from "#mari-plugin/types";
+import { AttrIconMap, EnKa, EnKaArtifact, EnKaChara, EnKaMeta } from "#/mari-plugin/types";
 
 const __API = {
 	FETCH_COMMITS_INFO: "https://api.github.com/repos/MarryDream/mari-plugin/commits",
@@ -16,24 +16,24 @@ const __API = {
 
 /* 检查更新 */
 export async function getCommitsInfo(): Promise<any[]> {
-	const result: Response = await fetch( __API.FETCH_COMMITS_INFO );
+	const result = await fetch( __API.FETCH_COMMITS_INFO );
 	return await result.json();
 }
 
 export async function getCharacterId(): Promise<Record<string, number>> {
-	const result: Response = await fetch( __API.FETCH_CHARACTER_ID );
+	const result = await fetch( __API.FETCH_CHARACTER_ID );
 	return parse( await result.text() );
 }
 
 export async function getArtifactId(): Promise<Record<string, string>> {
-	const result: Response = await fetch( __API.FETCH_ARTIFACT_ID );
+	const result = await fetch( __API.FETCH_ARTIFACT_ID );
 	return parse( await result.text() );
 }
 
 export async function getCharaDetail( origin: string, uid: number ): Promise<EnKa> {
 	const charaDetailApi = origin + __API.FETCH_CHARA_DETAIL.replace( "$", uid.toString() );
 	
-	const result: Response = await fetch( charaDetailApi, {
+	const result = await fetch( charaDetailApi, {
 		headers: {
 			"User-Agent": `mari-plugin/1.0`
 		}
@@ -42,21 +42,21 @@ export async function getCharaDetail( origin: string, uid: number ): Promise<EnK
 }
 
 export async function getEnKaArtifact(): Promise<EnKaArtifact> {
-	const result: Response = await fetch( __API.FETCH_ENKA_ARTIFACT );
+	const result = await fetch( __API.FETCH_ENKA_ARTIFACT );
 	return parse( await result.text() );
 }
 
 export async function getEnKaChara(): Promise<EnKaChara> {
-	const result: Response = await fetch( __API.FETCH_ENKA_CHARA );
+	const result = await fetch( __API.FETCH_ENKA_CHARA );
 	return parse( await result.text() );
 }
 
 export async function getEnKaMeta(): Promise<EnKaMeta> {
-	const result: Response = await fetch( __API.FETCH_ENKA_META );
+	const result = await fetch( __API.FETCH_ENKA_META );
 	return parse( await result.text() );
 }
 
 export async function getAttrIcon(): Promise<AttrIconMap> {
-	const result: Response = await fetch( __API.FETCH_ATTR_ICON );
+	const result = await fetch( __API.FETCH_ATTR_ICON );
 	return parse( await result.text() );
 }

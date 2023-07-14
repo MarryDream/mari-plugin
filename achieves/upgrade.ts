@@ -1,8 +1,8 @@
 import { exec } from "child_process";
-import { InputParameter } from "@modules/command";
+import { defineDirective, InputParameter } from "@/modules/command";
 import { restart } from "pm2";
-import { getCommitsInfo } from "#mari-plugin/utils/api";
-import { waitWithTimeout } from "#mari-plugin/utils/utils";
+import { getCommitsInfo } from "#/mari-plugin/utils/api";
+import { waitWithTimeout } from "#/mari-plugin/utils/utils";
 
 /* 命令执行 */
 async function execHandle( command: string ): Promise<string> {
@@ -38,7 +38,7 @@ async function updateBot( { messageData, sendMessage, logger }: InputParameter )
 		} else {
 			await sendMessage( `更新失败，可能是网络出现问题${ !isForce ? "或存在代码冲突，若不需要保留改动代码可以追加 -f 使用强制更新" : "" }` );
 		}
-		logger.error( `茉莉更新失败: ${ typeof error === "string" ? error : error.message }` );
+		logger.error( `茉莉更新失败: ${ typeof error === "string" ? error : ( <Error>error ).message }` );
 		throw error;
 	}
 	
@@ -51,10 +51,10 @@ async function updateBot( { messageData, sendMessage, logger }: InputParameter )
 	} );
 }
 
-export async function main( i: InputParameter ): Promise<void> {
+export default defineDirective( "order", async i => {
 	const dbKey: string = "mari-plugin.update-time";
 	
-	let commits: any[] = []
+	let commits: any[] = [];
 	try {
 		commits = await getCommitsInfo();
 	} catch ( error ) {
@@ -95,4 +95,4 @@ export async function main( i: InputParameter ): Promise<void> {
 		return;
 	}
 	await i.redis.setString( dbKey, newDate );
-}
+} );

@@ -1,5 +1,5 @@
 import { scheduleJob } from "node-schedule";
-import { getCharacterId } from "#mari-plugin/utils/api";
+import { getCharacterId } from "#/mari-plugin/utils/api";
 
 export class CharacterId {
 	public map: Record<string, number> = {};

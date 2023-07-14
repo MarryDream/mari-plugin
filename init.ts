@@ -1,59 +1,57 @@
-import bot from "ROOT";
 import * as m from "./module";
-import pluginSetting from "./setting";
-import { PluginSetting } from "@modules/plugin";
-import { createServer } from "./server";
-import { BOT } from "@modules/bot";
-import MariPluginConfig, { IMariPluginConfig } from "./module/config";
-import FileManagement from "@modules/file";
-import { Renderer } from "@modules/renderer";
-export let config: MariPluginConfig
+import { definePlugin } from "@/modules/plugin";
+import cfgList from "./commands";
+import routers from "./routes";
+import { Renderer } from "@/modules/renderer";
+import { ExportConfig } from "@/modules/config";
+
+export let config: ExportConfig<typeof initConfig>;
 export let renderer: Renderer;
-export const artifactId = new m.ArtifactId();
-export const enKaClass = new m.EnKaClass();
-export const characterId = new m.CharacterId();
-export const attrIcon = new m.AttrIcon();
+export let artifactId: m.ArtifactId;
+export let enKaClass: m.EnKaClass;
+export let characterId: m.CharacterId;
+export let attrIcon: m.AttrIcon;
 
-export const configFileName = "mari_plugin";
+const initConfig = {
+	tips: "若 enka 连接异常，可尝试更换 enKaApi 为下面的代理地址\n" +
+		"原地址：https://enka.shinshin.moe/\n" +
+		"代理地址A：https://enka.microgg.cn/\n" +
+		"代理地址B：https://enka.minigg.cn/\n" +
+		"感谢 @MiniGrayGay(Github: https://github.com/MiniGrayGay) 提供的反代服务",
+	serverPort: 60721,
+	uidQuery: false,
+	enKaApi: "https://enka.shinshin.moe/",
+	aliases: [ "茉莉" ]
+};
 
-function loadConfig( file: FileManagement ): MariPluginConfig {
-	const initCfg = MariPluginConfig.init;
-	
-	const path: string = file.getFilePath( `${ configFileName }.yml` );
-	const isExist: boolean = file.isExist( path );
-	if ( !isExist ) {
-		file.createYAML( configFileName, initCfg );
-		return new MariPluginConfig( initCfg );
-	}
-	
-	const config: IMariPluginConfig = file.loadYAML( configFileName );
-	const keysNum = o => Object.keys( o ).length;
-	
-	/* 检查 defaultConfig 是否更新 */
-	if ( keysNum( config ) !== keysNum( initCfg ) ) {
-		const c: any = {};
-		const keys: string[] = Object.keys( initCfg );
-		for ( let k of keys ) {
-			c[k] = config[k] ? config[k] : initCfg[k];
-		}
-		file.writeYAML( configFileName, c );
-		return new MariPluginConfig( c );
-	}
-	return new MariPluginConfig( config );
+function initModules() {
+	artifactId = new m.ArtifactId();
+	enKaClass = new m.EnKaClass();
+	characterId = new m.CharacterId();
+	attrIcon = new m.AttrIcon();
 }
 
-export async function init( { file, logger }: BOT ): Promise<PluginSetting> {
-	/* 加载 mari-plugin.yml 配置 */
-	config = loadConfig( file );
-	/* 实例化渲染器 */
-	renderer = bot.renderer.register(
-		"mari-plugin", "/views",
-		config.serverPort, "#app"
-	);
-	/* 启动 express 服务 */
-	createServer( config, logger );
-	
-	bot.refresh.registerRefreshableFile( configFileName, config );
-	
-	return pluginSetting( config );
-}
+export default definePlugin( {
+	name: "茉莉",
+	cfgList,
+	repo: {
+		owner: "MarryDream",
+		repoName: "mari-plugin",
+		ref: "main"
+	},
+	server: {
+		routers
+	},
+	mounted( params ) {
+		/* 加载 mari-plugin.yml 配置 */
+		config = params.configRegister( "main", initConfig );
+		
+		params.setAlias( config.aliases );
+		config.on( "refresh", newCfg => {
+			params.setAlias( newCfg.aliases );
+		} );
+		
+		renderer = params.renderRegister( "#app" );
+		initModules();
+	}
+} );

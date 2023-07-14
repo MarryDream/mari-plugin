@@ -1,11 +1,12 @@
-import { InputParameter } from "@modules/command";
-import { charaDetailPromise } from "#mari-plugin/utils/promise";
-import * as ApiType from "#mari-plugin/types";
+import { defineDirective } from "@/modules/command";
+import { charaDetailPromise } from "#/mari-plugin/utils/promise";
+import * as ApiType from "#/mari-plugin/types";
 import { getUID, isAt } from "../../utils/message";
-import { config } from "#mari-plugin/init";
+import { config } from "#/mari-plugin/init";
 
-export async function main( { sendMessage, messageData, redis, logger }: InputParameter ): Promise<void> {
-	const msg: string = messageData.raw_message;
+
+export default defineDirective( "order", async ( { sendMessage, messageData, matchResult, redis, logger } ) => {
+	const msg: string = matchResult.match[0];
 	const userID: number = messageData.user_id;
 	
 	const isClear = msg === "-c";
@@ -52,4 +53,4 @@ export async function main( { sendMessage, messageData, redis, logger }: InputPa
 	
 	const msgUser = self ? "" : `用户「${ uid }」`;
 	await sendMessage( `更新面板数据成功，${ msgUser }当前可查询角色列表为：${ avatarNames }` );
-}
+} );

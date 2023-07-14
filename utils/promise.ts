@@ -1,10 +1,10 @@
 import bot from "ROOT";
-import { getCharaDetail } from "#mari-plugin/utils/api";
-import { enKaClass } from "#mari-plugin/init";
-import { EnKa } from "#mari-plugin/utils/enka";
-import { config } from "#mari-plugin/init";
-import { SendFunc } from "@modules/message";
-import * as ApiType from "#mari-plugin/types"
+import { getCharaDetail } from "#/mari-plugin/utils/api";
+import { enKaClass } from "#/mari-plugin/init";
+import { EnKa } from "#/mari-plugin/utils/enka";
+import { config } from "#/mari-plugin/init";
+import { SendFunc } from "@/modules/message";
+import * as ApiType from "#/mari-plugin/types"
 
 export enum ErrorMsg {
 	IS_PENDING = "两次请求间隔较短，请于 $ 后再次尝试",

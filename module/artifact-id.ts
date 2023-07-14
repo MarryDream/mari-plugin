@@ -1,5 +1,5 @@
 import { scheduleJob } from "node-schedule";
-import { getArtifactId } from "#mari-plugin/utils/api";
+import { getArtifactId } from "#/mari-plugin/utils/api";
 
 export class ArtifactId {
 	public map: Record<string, string> = {};

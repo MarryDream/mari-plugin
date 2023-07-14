@@ -109,7 +109,7 @@ export default defineComponent( {
 	},
 	setup() {
 		const urlParams = parseURL( location.search );
-		const data = request( `/api/chara?qq=${ urlParams.qq }` );
+		const data = request( `/mari-plugin/api/chara?qq=${ urlParams.qq }` );
 		
 		const styleMap = {
 			anemo: [ "#41c88f", "110deg", "120deg" ],
@@ -126,7 +126,7 @@ export default defineComponent( {
 		const artifactsFontIcon = [ "icon-flower", "icon-plume", "icon-sands", "icon-goblet", "icon-circle" ]
 		
 		onMounted( () => {
-			const elemStyle = styleMap[data.element];
+			const elemStyle = styleMap[data.element.toLowerCase()];
 			document.documentElement.style.setProperty( "--base-color", elemStyle[0] );
 			document.documentElement.style.setProperty( "--bg-hue-rotate", elemStyle[1] );
 			document.documentElement.style.setProperty( "--talent-hue-rotate", elemStyle[2] );

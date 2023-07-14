@@ -1,6 +1,6 @@
 import { scheduleJob } from "node-schedule";
-import { EnKaArtifact, EnKaChara, EnKaMeta } from "#mari-plugin/types";
-import { getEnKaArtifact, getEnKaChara, getEnKaMeta } from "#mari-plugin/utils/api";
+import { EnKaArtifact, EnKaChara, EnKaMeta } from "#/mari-plugin/types";
+import { getEnKaArtifact, getEnKaChara, getEnKaMeta } from "#/mari-plugin/utils/api";
 
 export class EnKaClass {
 	public chara: EnKaChara = {};

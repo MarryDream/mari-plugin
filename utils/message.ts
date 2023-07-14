@@ -1,7 +1,7 @@
 import bot from "ROOT";
-import Database from "@modules/database";
-import { AuthLevel } from "@modules/management/auth";
-import { Order } from "@modules/command";
+import Database from "@/modules/database";
+import { AuthLevel } from "@/modules/management/auth";
+import { Order } from "@/modules/command";
 
 interface UIDResult {
 	info: number | string;

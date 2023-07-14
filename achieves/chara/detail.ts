@@ -1,25 +1,14 @@
-import { InputParameter, Order } from "@modules/command";
-import { getRealName, NameResult } from "#genshin/utils/name";
-import { characterId, config, renderer } from "#mari-plugin/init";
-import { charaDetailPromise, ErrorMsg } from "#mari-plugin/utils/promise";
-import { RenderResult } from "@modules/renderer";
-import * as ApiType from "#mari-plugin/types";
-import { typeData } from "#genshin/init";
-import { getUID, isAt } from "#mari-plugin/utils/message";
-import bot from "ROOT";
+import { defineDirective } from "@/modules/command";
+import { getRealName, NameResult } from "#/genshin/utils/name";
+import { characterId, config, renderer } from "#/mari-plugin/init";
+import { charaDetailPromise, ErrorMsg } from "#/mari-plugin/utils/promise";
+import { RenderResult } from "@/modules/renderer";
+import * as ApiType from "#/mari-plugin/types";
+import { typeData } from "#/genshin/init";
+import { getUID, isAt } from "#/mari-plugin/utils/message";
 
-export async function main( { sendMessage, messageData, redis, logger, auth }: InputParameter ): Promise<void> {
-	const msg: string = messageData.raw_message;
-	
-	const parser = /([\u4e00-\u9fa5]+)\s*(\d{9})?\s*(\[CQ:at,type=at,qq=\d+.*])?/i;
-	const execRes = parser.exec( msg );
-	if ( !execRes ) {
-		await sendMessage( "指令格式有误" );
-		return;
-	}
-	
-	const reg = execRes;
-	const [ , name, uidStr, atMsg ] = reg;
+export default defineDirective( "order", async ( { sendMessage, messageData, matchResult, redis, logger } ) => {
+	const [ name, uidStr, atMsg ] = matchResult.match;
 	
 	if ( !config.uidQuery && uidStr ) {
 		await sendMessage( "bot 持有者已关闭 uid 查询功能" );
@@ -95,13 +84,10 @@ export async function main( { sendMessage, messageData, redis, logger, auth }: I
 	} ) );
 	
 	const res: RenderResult = await renderer.asSegment(
-		"/chara-detail.html", { qq: target, stranger } );
+		"/views/chara-detail.html", { qq: target, stranger } );
 	if ( res.code === "ok" ) {
 		await sendMessage( res.data );
 	} else {
-		logger.error( res.error );
-		const CALL = <Order>bot.command.getSingle( "adachi.call", await auth.get( userID ) );
-		const appendMsg = CALL ? `私聊使用 ${ CALL.getHeaders()[0] } ` : "";
-		await sendMessage( `图片渲染异常，请${ appendMsg }联系持有者进行反馈` );
+		throw new Error( res.error );
 	}
-}
+} );
