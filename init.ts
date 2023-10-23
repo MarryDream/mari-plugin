@@ -39,6 +39,7 @@ export default definePlugin( {
 		repoName: "mari-plugin",
 		ref: "main"
 	},
+	publicDirs: [ "components", "public", "styles", "views" ],
 	server: {
 		routers
 	},

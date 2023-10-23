@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import { defineDirective, InputParameter } from "@/modules/command";
-import { restart } from "pm2";
+import pm2 from "pm2";
 import { getCommitsInfo } from "#/mari-plugin/utils/api";
 import { waitWithTimeout } from "#/mari-plugin/utils/utils";
 
@@ -44,7 +44,7 @@ async function updateBot( { messageData, sendMessage, logger }: InputParameter )
 	
 	await sendMessage( "更新成功，BOT 正在自行重启，请稍后" );
 	
-	restart( "adachi-bot", async ( error ) => {
+	pm2.restart( "adachi-bot", async ( error ) => {
 		logger.error( error );
 		await sendMessage( `重启 BOT 出错: ${ error }` );
 		throw error;
