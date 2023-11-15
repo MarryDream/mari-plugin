@@ -5,6 +5,8 @@
 </p>
 <h2 align="center">茉莉|Mari-Plugin</h2>
 
+> 本项目已合并至 [adachi-genshin-plugin](https://github.com/MarryDream/adachi-genshin-plugin)，此仓库不再进行更新
+
 # 简介
 
 Mari-Plugin 为 [Adachi-BOT][1] 的衍生插件，用于实现部分实验性功能，并将在功能稳定后并入 [Adachi-BOT][1] 主项目。
